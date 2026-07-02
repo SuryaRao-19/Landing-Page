@@ -6,50 +6,60 @@ import { Plus, Minus } from 'lucide-react'
 import { FAQS } from '@/lib/data'
 import { SectionHeader } from '@/components/shared/section-header'
 
-export function FAQSection({ items = FAQS, center = true }: { items?: typeof FAQS; center?: boolean }) {
+export function FAQSection() {
   const [open, setOpen] = useState<number | null>(0)
 
   return (
-    <section className="section" aria-label="Frequently asked questions">
+    <section className="section bg-white" id="faq">
       <div className="container max-w-3xl">
         <SectionHeader
           label="FAQ"
-          title="Frequently Asked"
+          title="Common"
           highlight="Questions"
-          subtitle="Everything you need to know about working with NexGen Technologies."
-          center={center}
-          className="mb-12"
+          subtitle="Everything you need to know before starting your engagement with NexGen."
+          center
+          className="mb-14"
         />
 
-        <div className="space-y-3" role="list">
-          {items.map((faq, i) => (
+        <div className="space-y-2.5">
+          {FAQS.map((faq, i) => (
             <div
               key={i}
-              className="border border-slate-100 rounded-2xl overflow-hidden bg-white"
-              role="listitem"
+              className={`border rounded-[18px] overflow-hidden transition-all duration-250 ${
+                open === i
+                  ? 'border-[rgba(37,99,235,.2)] shadow-[0_4px_24px_rgba(37,99,235,.07)] bg-white'
+                  : 'border-[#E8EEF4] bg-white hover:border-[#CBD5E1]'
+              }`}
             >
               <button
-                className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left font-semibold text-slate-900 hover:text-blue-700 transition-colors"
+                className="w-full flex items-center justify-between gap-5 px-6 py-5 text-left transition-colors"
                 onClick={() => setOpen(open === i ? null : i)}
                 aria-expanded={open === i}
-                aria-controls={`faq-answer-${i}`}
               >
-                <span className="text-sm sm:text-base">{faq.question}</span>
-                <div className="shrink-0 w-6 h-6 rounded-full bg-slate-100 flex items-center justify-center">
-                  {open === i ? <Minus size={12} /> : <Plus size={12} />}
+                <span className="font-semibold text-[1rem] text-[#0A0F1C] leading-snug tracking-[-0.01em]">
+                  {faq.question}
+                </span>
+                <div
+                  className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center transition-all duration-200 ${
+                    open === i
+                      ? 'bg-[#2563EB] text-white shadow-[0_2px_8px_rgba(37,99,235,.35)]'
+                      : 'bg-[#F1F5F9] text-[#64748B] hover:bg-[#E2E8F0]'
+                  }`}
+                >
+                  {open === i ? <Minus size={13} /> : <Plus size={13} />}
                 </div>
               </button>
+
               <AnimatePresence initial={false}>
                 {open === i && (
                   <motion.div
-                    id={`faq-answer-${i}`}
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: .2 }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
                     className="overflow-hidden"
                   >
-                    <p className="px-6 pb-5 text-slate-500 text-sm leading-relaxed border-t border-slate-50 pt-3">
+                    <p className="px-6 pb-6 text-[0.9375rem] text-[#64748B] leading-[1.8]">
                       {faq.answer}
                     </p>
                   </motion.div>

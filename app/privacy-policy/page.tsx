@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { PageHero } from '@/components/shared/page-hero'
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -34,23 +35,32 @@ const SECTIONS = [
 
 export default function PrivacyPolicyPage() {
   return (
-    <div className="pt-36 pb-20">
-      <div className="container max-w-3xl">
-        <h1 className="font-extrabold text-slate-900 text-4xl mb-3 tracking-tight">Privacy Policy</h1>
-        <p className="text-slate-500 text-sm mb-10">Last updated: 1 January 2025 · Effective date: 1 January 2025</p>
+    <>
+      <PageHero
+        eyebrow="Legal"
+        title="Privacy Policy"
+        subtitle="How we collect, use, and protect your personal data."
+        breadcrumbs={[{ label: 'Privacy Policy' }]}
+        size="sm"
+      />
 
-        <div className="prose prose-slate max-w-none space-y-10">
-          <p className="text-slate-600 leading-relaxed">
-            NexGen Technologies Pvt. Ltd. (&ldquo;NexGen&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;) is committed to protecting your personal data and your privacy. This policy explains how we collect, use, store, and protect your information when you visit our website or engage our services.
-          </p>
-          {SECTIONS.map((section) => (
-            <div key={section.title}>
-              <h2 className="font-bold text-slate-900 text-xl mb-3">{section.title}</h2>
-              <p className="text-slate-600 leading-relaxed">{section.content}</p>
-            </div>
-          ))}
+      <section className="section bg-white">
+        <div className="container max-w-3xl">
+          <p className="text-[#64748B] text-sm mb-10">Last updated: 1 January 2025 · Effective date: 1 January 2025</p>
+
+          <div className="max-w-none space-y-10">
+            <p className="text-[#475569] leading-relaxed">
+              NexGen Technologies Pvt. Ltd. (&ldquo;NexGen&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, &ldquo;us&rdquo;) is committed to protecting your personal data and your privacy. This policy explains how we collect, use, store, and protect your information when you visit our website or engage our services.
+            </p>
+            {SECTIONS.map((section) => (
+              <div key={section.title}>
+                <h2 className="font-bold text-[#0A0F1C] text-xl mb-3">{section.title}</h2>
+                <p className="text-[#475569] leading-relaxed">{section.content}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
-    </div>
+      </section>
+    </>
   )
 }

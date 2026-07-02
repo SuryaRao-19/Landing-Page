@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { ContactForm } from './contact-form'
-import { Mail, Phone, MapPin, MessageCircle } from 'lucide-react'
-import { SectionHeader } from '@/components/shared/section-header'
+import { Mail, Phone, MapPin, MessageCircle, Clock, CheckCircle2 } from 'lucide-react'
+import { PageHero } from '@/components/shared/page-hero'
 import { FAQSection } from '@/components/sections/faq-section'
 
 export const metadata: Metadata = {
   title: 'Contact Us — Get in Touch',
-  description: "Contact NexGen Technologies for a free consultation. Reach us by phone, email, WhatsApp, or fill out our form and we'll respond within 24 hours.",
+  description: "Contact NexGen Technologies for a free consultation. Reach us by phone, email, or fill out our form and we'll respond within 2 business hours.",
 }
 
 const OFFICES = [
@@ -16,96 +16,134 @@ const OFFICES = [
   { city: 'Dubai (MENA)',   address: 'Dubai Silicon Oasis, Dubai, UAE',                             phone: '+971 4 123 4567' },
 ]
 
+const QUICK_LINKS = [
+  { icon: MessageCircle, label: 'WhatsApp',   sub: 'Instant reply',   href: 'https://wa.me/918045678900', color: '#10B981', bg: '#F0FDF4', border: '#D1FAE5' },
+  { icon: Mail,          label: 'Email',      sub: '2-hour response', href: 'mailto:hello@nexgentech.in', color: '#2563EB', bg: '#EFF6FF', border: '#DBEAFE' },
+]
+
 export default function ContactPage() {
   return (
     <>
-      <section
-        className="pt-36 pb-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#F8FAFC 0%,#EEF2FF 100%)' }}
+      <PageHero
+        eyebrow="Get In Touch"
+        title="Let's Start a"
+        highlight="Conversation"
+        subtitle="Tell us about your project. We respond within 2 business hours with initial thoughts and a proposal for a deeper discussion."
+        breadcrumbs={[{ label: 'Contact' }]}
       >
-        <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-        <div className="container relative z-10 text-center">
-          <SectionHeader
-            label="Get In Touch"
-            title="Let's Start a"
-            highlight="Conversation"
-            subtitle="Tell us about your project or challenge. We'll respond within 24 hours with initial thoughts and a proposal to schedule a deeper discussion."
-            center
-          />
-          <div className="flex flex-wrap justify-center gap-6 mt-8">
-            <a href="mailto:hello@nexgentech.in" className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600 transition-colors">
-              <Mail size={16} className="text-blue-500" /> hello@nexgentech.in
-            </a>
-            <a href="tel:+918045678900" className="flex items-center gap-2 text-sm text-slate-600 hover:text-blue-600 transition-colors">
-              <Phone size={16} className="text-blue-500" /> +91 80 4567 8900
-            </a>
-            <a href="https://wa.me/918045678900" className="flex items-center gap-2 text-sm text-slate-600 hover:text-green-600 transition-colors">
-              <MessageCircle size={16} className="text-green-500" /> WhatsApp Us
-            </a>
-          </div>
+        {/* Quick contact row */}
+        <div className="flex flex-wrap justify-center gap-5">
+          <a href="mailto:hello@nexgentech.in" className="flex items-center gap-2 text-sm text-[#475569] hover:text-[#2563EB] transition-colors">
+            <Mail size={15} className="text-[#2563EB]" /> hello@nexgentech.in
+          </a>
+          <a href="tel:+918045678900" className="flex items-center gap-2 text-sm text-[#475569] hover:text-[#2563EB] transition-colors">
+            <Phone size={15} className="text-[#2563EB]" /> +91 80 4567 8900
+          </a>
+          <a href="https://wa.me/918045678900" className="flex items-center gap-2 text-sm text-[#475569] hover:text-[#10B981] transition-colors">
+            <MessageCircle size={15} className="text-[#10B981]" /> WhatsApp Us
+          </a>
         </div>
-      </section>
+      </PageHero>
 
-      <section className="section">
+      <section className="section bg-white">
         <div className="container">
-          <div className="grid lg:grid-cols-5 gap-10">
-            {/* Form */}
+          <div className="grid lg:grid-cols-5 gap-10 xl:gap-14">
+
+            {/* ── Form ─── */}
             <div className="lg:col-span-3">
-              <div className="bg-white rounded-3xl border border-slate-100 p-8 shadow-sm">
-                <h2 className="font-bold text-slate-900 text-xl mb-2">Send Us a Message</h2>
-                <p className="text-slate-500 text-sm mb-8">We typically respond within 24 business hours. All enquiries are treated with strict confidentiality.</p>
+              <div className="bg-white border border-[#E2E8F0] rounded-[24px] p-7 sm:p-10 shadow-[0_4px_24px_rgba(0,0,0,.05)]">
+                <div className="flex items-start justify-between mb-8">
+                  <div>
+                    <h2 className="font-extrabold text-[#0A0F1C] text-xl tracking-tight">Send Us a Message</h2>
+                    <p className="text-sm text-[#94A3B8] mt-1">All enquiries treated with strict confidentiality.</p>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-full shrink-0">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Team online now
+                  </div>
+                </div>
                 <ContactForm />
               </div>
             </div>
 
-            {/* Sidebar */}
-            <aside className="lg:col-span-2 space-y-6">
+            {/* ── Sidebar ─── */}
+            <aside className="lg:col-span-2 space-y-5">
+              {/* Response time promise */}
+              <div className="bg-[#0A0F1C] rounded-[20px] p-6">
+                <Clock size={18} className="text-[#60A5FA] mb-3" />
+                <p className="font-bold text-white text-[.9375rem] mb-1.5">We respond fast</p>
+                <div className="space-y-2">
+                  {[
+                    ['Business hours', '< 2 hours'],
+                    ['After hours',    '< 12 hours'],
+                    ['Weekends',       '< 24 hours'],
+                  ].map(([label, time]) => (
+                    <div key={label} className="flex items-center justify-between text-xs">
+                      <span className="text-white/50">{label}</span>
+                      <span className="font-semibold text-white/80">{time}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Quick links */}
+              <div className="grid grid-cols-2 gap-3">
+                {QUICK_LINKS.map((q) => (
+                  <a
+                    key={q.label}
+                    href={q.href}
+                    target={q.href.startsWith('http') ? '_blank' : undefined}
+                    rel="noopener noreferrer"
+                    className="flex flex-col gap-1.5 rounded-[16px] p-4 border transition-all hover:-translate-y-0.5 hover:shadow-md"
+                    style={{ background: q.bg, borderColor: q.border }}
+                  >
+                    <q.icon size={18} style={{ color: q.color }} />
+                    <p className="font-bold text-sm text-[#0A0F1C]">{q.label}</p>
+                    <p className="text-[11px] text-[#94A3B8]">{q.sub}</p>
+                  </a>
+                ))}
+              </div>
+
               {/* Offices */}
-              <div className="bg-slate-50 rounded-3xl p-6">
-                <h3 className="font-bold text-slate-900 mb-5">Our Offices</h3>
+              <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-[20px] p-6">
+                <p className="font-bold text-[#0A0F1C] text-[.875rem] mb-5">Our Offices</p>
                 <div className="space-y-5">
                   {OFFICES.map((office) => (
                     <div key={office.city} className="flex gap-3">
-                      <MapPin size={16} className="text-blue-500 mt-0.5 shrink-0" />
+                      <MapPin size={13} className="text-[#2563EB] mt-0.5 shrink-0" />
                       <div>
-                        <p className="font-semibold text-slate-900 text-sm">{office.city}</p>
-                        <p className="text-xs text-slate-500 mt-0.5">{office.address}</p>
-                        <a href={`tel:${office.phone.replace(/\s/g,'')}`} className="text-xs text-blue-600 hover:text-blue-800 mt-1 block">{office.phone}</a>
+                        <p className="font-semibold text-[#0A0F1C] text-xs">{office.city}</p>
+                        <p className="text-[11px] text-[#94A3B8] mt-0.5 leading-relaxed">{office.address}</p>
+                        <a
+                          href={`tel:${office.phone.replace(/\s/g,'')}`}
+                          className="text-[11px] text-[#2563EB] hover:text-[#1D4ED8] mt-1 block font-medium"
+                        >
+                          {office.phone}
+                        </a>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              {/* Map placeholder */}
-              <div
-                className="rounded-3xl overflow-hidden h-56 flex items-center justify-center bg-slate-100 border border-slate-200"
-                aria-label="Map showing office location in Bengaluru"
-                role="img"
-              >
-                <div className="text-center">
-                  <MapPin size={32} className="text-blue-400 mx-auto mb-2" />
-                  <p className="text-sm text-slate-400">Prestige Tech Park</p>
-                  <p className="text-xs text-slate-300">Bengaluru, Karnataka</p>
+              {/* What to expect */}
+              <div className="bg-white border border-[#E2E8F0] rounded-[20px] p-6">
+                <p className="font-bold text-[#0A0F1C] text-[.875rem] mb-4">What happens next?</p>
+                <div className="space-y-3">
+                  {[
+                    'We review your requirements',
+                    'A senior architect reaches out',
+                    'Free 60-min discovery call',
+                    'Tailored proposal within 48h',
+                  ].map((step, i) => (
+                    <div key={step} className="flex items-center gap-3">
+                      <div className="w-5 h-5 rounded-full bg-[#EFF6FF] border border-[#DBEAFE] flex items-center justify-center shrink-0">
+                        <span className="text-[10px] font-bold text-[#2563EB]">{i + 1}</span>
+                      </div>
+                      <p className="text-[12.5px] text-[#475569]">{step}</p>
+                    </div>
+                  ))}
                 </div>
-              </div>
-
-              {/* Quick contact chips */}
-              <div className="grid grid-cols-2 gap-3">
-                <a
-                  href="https://wa.me/918045678900"
-                  className="flex flex-col items-center gap-2 bg-green-50 border border-green-100 rounded-2xl p-4 hover:bg-green-100 transition-colors text-center"
-                >
-                  <MessageCircle size={20} className="text-green-600" />
-                  <span className="text-xs font-semibold text-green-700">WhatsApp</span>
-                </a>
-                <a
-                  href="mailto:hello@nexgentech.in"
-                  className="flex flex-col items-center gap-2 bg-blue-50 border border-blue-100 rounded-2xl p-4 hover:bg-blue-100 transition-colors text-center"
-                >
-                  <Mail size={20} className="text-blue-600" />
-                  <span className="text-xs font-semibold text-blue-700">Email</span>
-                </a>
               </div>
             </aside>
           </div>

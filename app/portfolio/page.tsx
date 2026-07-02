@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SectionHeader } from '@/components/shared/section-header'
+import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'
 
 export const metadata: Metadata = {
@@ -22,29 +22,21 @@ const PORTFOLIO_ITEMS = [
 export default function PortfolioPage() {
   return (
     <>
-      <section
-        className="pt-36 pb-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#F8FAFC 0%,#EEF2FF 100%)' }}
-      >
-        <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-        <div className="container relative z-10 text-center">
-          <SectionHeader
-            label="Portfolio"
-            title="Projects That Define"
-            highlight="Excellence"
-            subtitle="A curated selection of our most impactful enterprise technology projects — each one a story of transformation, innovation, and measurable results."
-            center
-          />
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Portfolio"
+        title="Projects That Define"
+        highlight="Excellence"
+        subtitle="A curated selection of our most impactful enterprise technology projects — each one a story of transformation, innovation, and measurable results."
+        breadcrumbs={[{ label: 'Portfolio' }]}
+      />
 
-      <section className="section">
+      <section className="section bg-white">
         <div className="container">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {PORTFOLIO_ITEMS.map((item) => (
               <article
                 key={item.title}
-                className="group bg-white rounded-2xl border border-slate-100 overflow-hidden hover:-translate-y-1 hover:shadow-2xl transition-all duration-300"
+                className="group bg-white border border-[#E2E8F0] rounded-[20px] overflow-hidden hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] transition-all duration-300"
               >
                 <div
                   className="h-44 flex items-center justify-center text-5xl"
@@ -60,9 +52,9 @@ export default function PortfolioPage() {
                     >
                       {item.type}
                     </span>
-                    <span className="text-xs text-slate-400">{item.industry}</span>
+                    <span className="text-xs text-[#94A3B8]">{item.industry}</span>
                   </div>
-                  <h2 className="font-bold text-slate-900 text-base group-hover:text-blue-700 transition-colors">{item.title}</h2>
+                  <h2 className="font-bold text-[#0A0F1C] text-base group-hover:text-[#2563EB] transition-colors">{item.title}</h2>
                 </div>
               </article>
             ))}

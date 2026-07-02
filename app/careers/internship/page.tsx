@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, GraduationCap } from 'lucide-react'
-import { SectionHeader } from '@/components/shared/section-header'
+import { ArrowRight } from 'lucide-react'
+import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'
 
 export const metadata: Metadata = {
@@ -20,33 +20,23 @@ const TRACKS = [
 export default function InternshipPage() {
   return (
     <>
-      <section
-        className="pt-36 pb-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#F8FAFC 0%,#F0FDF4 100%)' }}
-      >
-        <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-        <div className="container relative z-10 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 bg-teal-50 text-teal-700 border border-teal-100 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-wider mb-6">
-            <GraduationCap size={14} /> Internship Program
-          </div>
-          <h1 className="font-extrabold text-slate-900 text-4xl sm:text-5xl mb-5 leading-tight tracking-tight">
-            Launch Your Career at <span className="text-grad">NexGen</span>
-          </h1>
-          <p className="text-lg text-slate-500 leading-relaxed">
-            Work on real enterprise projects. Get mentored by senior engineers. Build skills that matter. Our 3–6 month structured internship program is designed to launch exceptional careers in technology.
-          </p>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Internship Program"
+        title="Launch Your Career at"
+        highlight="NexGen"
+        subtitle="Work on real enterprise projects. Get mentored by senior engineers. Build skills that matter. Our 3–6 month structured internship program is designed to launch exceptional careers in technology."
+        breadcrumbs={[{ label: 'Careers', href: '/careers' }, { label: 'Internships' }]}
+      />
 
       {/* Tracks */}
-      <section className="section">
+      <section className="section bg-white">
         <div className="container">
-          <SectionHeader label="Programs" title="Choose Your" highlight="Track" center className="mb-12" />
+          <div className="text-center mb-12"><div className="pill mx-auto w-fit mb-5">Programs</div><h2 className="display-md text-[#0A0F1C]">Choose Your <span className="text-grad">Track</span></h2></div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {TRACKS.map((track) => (
-              <div key={track.title} className="bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+              <div key={track.title} className="bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] hover:-translate-y-1 transition-all duration-300">
                 <div className="text-3xl mb-4">{track.icon}</div>
-                <h3 className="font-bold text-slate-900 text-lg mb-1">{track.title}</h3>
+                <h3 className="font-bold text-[#0A0F1C] text-lg mb-1">{track.title}</h3>
                 <p className="text-sm text-teal-600 font-medium mb-4">{track.duration}</p>
                 <ul className="space-y-2">
                   {track.skills.map((skill) => (
@@ -63,9 +53,9 @@ export default function InternshipPage() {
       </section>
 
       {/* What you get */}
-      <section className="section bg-slate-50">
+      <section className="section bg-[#F8FAFC]">
         <div className="container max-w-3xl">
-          <SectionHeader label="Benefits" title="What You'll" highlight="Gain" center className="mb-10" />
+          <div className="text-center mb-10"><div className="pill mx-auto w-fit mb-5">Benefits</div><h2 className="display-md text-[#0A0F1C]">What You&apos;ll <span className="text-grad">Gain</span></h2></div>
           <div className="grid sm:grid-cols-2 gap-4">
             {[
               'Stipend of ₹20,000–40,000/month depending on track',
@@ -77,7 +67,7 @@ export default function InternshipPage() {
               'Access to our internal learning platform',
               'Networking with 150+ senior engineers and clients',
             ].map((item) => (
-              <div key={item} className="flex items-start gap-3 bg-white rounded-xl p-4 border border-slate-100">
+              <div key={item} className="flex items-start gap-3 bg-white rounded-xl p-4 border border-[#E2E8F0]">
                 <span className="text-teal-500 mt-0.5 shrink-0">✓</span>
                 <span className="text-sm text-slate-700">{item}</span>
               </div>
@@ -86,7 +76,7 @@ export default function InternshipPage() {
         </div>
       </section>
 
-      <CTASection title="Apply for the Internship Program" subtitle="Applications are reviewed on a rolling basis. Submit your CV and a brief note on which track interests you and why." />
+      <CTASection />
     </>
   )
 }

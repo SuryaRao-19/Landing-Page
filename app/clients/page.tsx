@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { SectionHeader } from '@/components/shared/section-header'
+import { PageHero } from '@/components/shared/page-hero'
 import { TestimonialsSection } from '@/components/sections/testimonials-section'
 import { CTASection } from '@/components/sections/cta-section'
 
@@ -18,41 +18,34 @@ const CLIENT_LOGOS = [
 export default function ClientsPage() {
   return (
     <>
-      <section
-        className="pt-36 pb-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#F8FAFC 0%,#EEF2FF 100%)' }}
+      <PageHero
+        eyebrow="Our Clients"
+        title="Trusted by 500+ Enterprises"
+        highlight="Worldwide"
+        subtitle="From India's leading banks to global manufacturers, NexGen serves enterprise clients across every sector and geography."
+        breadcrumbs={[{ label: 'Clients' }]}
       >
-        <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-        <div className="container relative z-10 text-center">
-          <SectionHeader
-            label="Our Clients"
-            title="Trusted by 500+ Enterprises"
-            highlight="Worldwide"
-            subtitle="From India's leading banks to global manufacturers, NexGen serves enterprise clients across every sector and geography."
-            center
-          />
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-10 max-w-2xl mx-auto">
-            {[['25+','Countries'],['500+','Clients'],['1000+','Projects'],['98%','Retention']].map(([v,l]) => (
-              <div key={l} className="bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
-                <p className="font-extrabold text-2xl text-grad">{v}</p>
-                <p className="text-xs text-slate-400 mt-1">{l}</p>
-              </div>
-            ))}
-          </div>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-2xl mx-auto">
+          {[['25+','Countries'],['500+','Clients'],['1000+','Projects'],['98%','Retention']].map(([v,l]) => (
+            <div key={l} className="bg-white border border-[#E2E8F0] rounded-[20px] p-4 shadow-sm">
+              <p className="font-extrabold text-2xl text-grad">{v}</p>
+              <p className="text-xs text-[#94A3B8] mt-1">{l}</p>
+            </div>
+          ))}
         </div>
-      </section>
+      </PageHero>
 
       {/* Logo wall */}
-      <section className="section">
+      <section className="section bg-white">
         <div className="container">
-          <p className="text-center text-sm text-slate-400 uppercase tracking-widest mb-10">Trusted by Industry Leaders</p>
+          <p className="text-center text-sm text-[#94A3B8] uppercase tracking-widest mb-10">Trusted by Industry Leaders</p>
           <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-4">
             {CLIENT_LOGOS.map((client) => (
               <div
                 key={client}
-                className="bg-slate-50 border border-slate-100 rounded-2xl p-4 flex items-center justify-center h-16 hover:bg-white hover:shadow-md transition-all duration-300"
+                className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 flex items-center justify-center h-16 hover:bg-white hover:shadow-md transition-all duration-300"
               >
-                <span className="font-bold text-xs text-slate-400 text-center leading-tight">{client}</span>
+                <span className="font-bold text-xs text-[#94A3B8] text-center leading-tight">{client}</span>
               </div>
             ))}
           </div>

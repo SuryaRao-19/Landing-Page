@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { MapPin, Clock, Briefcase, ArrowRight } from 'lucide-react'
 import { JOB_OPENINGS } from '@/lib/data'
-import { SectionHeader } from '@/components/shared/section-header'
+import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'
 
 export const metadata: Metadata = {
@@ -22,36 +22,29 @@ const BENEFITS = [
 export default function CareersPage() {
   return (
     <>
-      <section
-        className="pt-36 pb-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#0A1628 0%,#1B4FD8 100%)' }}
+      <PageHero
+        eyebrow="We're Hiring"
+        title="Build the Future of"
+        highlight="Enterprise Technology"
+        subtitle="Join a team of 150+ passionate engineers, designers, and strategists solving the hardest technology problems for India's and the world's leading enterprises."
+        breadcrumbs={[{ label: 'Careers' }]}
+        dark
       >
-        <div className="absolute inset-0 bg-dots opacity-20" aria-hidden />
-        <div className="container relative z-10 text-center max-w-3xl mx-auto">
-          <SectionHeader
-            label="We're Hiring"
-            title="Build the Future of"
-            highlight="Enterprise Technology"
-            subtitle="Join a team of 150+ passionate engineers, designers, and strategists solving the hardest technology problems for India's and the world's leading enterprises."
-            center
-            dark
-          />
-          <Link href="/careers/internship" className="inline-flex items-center gap-2 mt-8 text-blue-200 hover:text-white text-sm transition-colors">
-            Also looking for internships? <ArrowRight size={14} />
-          </Link>
-        </div>
-      </section>
+        <Link href="/careers/internship" className="inline-flex items-center gap-2 text-blue-200 hover:text-white text-sm transition-colors">
+          Also looking for internships? <ArrowRight size={14} />
+        </Link>
+      </PageHero>
 
       {/* Benefits */}
-      <section className="section">
+      <section className="section bg-white">
         <div className="container">
-          <SectionHeader label="Why NexGen" title="Benefits That" highlight="Matter" center className="mb-12" />
+          <div className="text-center mb-12"><div className="pill mx-auto w-fit mb-5">Why NexGen</div><h2 className="display-md text-[#0A0F1C]">Benefits That <span className="text-grad">Matter</span></h2></div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {BENEFITS.map((b) => (
-              <div key={b.title} className="bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-lg hover:-translate-y-1 transition-all duration-300">
+              <div key={b.title} className="bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] hover:-translate-y-1 transition-all duration-300">
                 <div className="text-3xl mb-4">{b.icon}</div>
-                <h3 className="font-bold text-slate-900 mb-2">{b.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{b.desc}</p>
+                <h3 className="font-bold text-[#0A0F1C] mb-2">{b.title}</h3>
+                <p className="text-sm text-[#64748B] leading-relaxed">{b.desc}</p>
               </div>
             ))}
           </div>
@@ -59,30 +52,30 @@ export default function CareersPage() {
       </section>
 
       {/* Open roles */}
-      <section className="section bg-slate-50">
+      <section className="section bg-[#F8FAFC]">
         <div className="container">
-          <SectionHeader label="Open Roles" title="Current" highlight="Openings" center className="mb-10" />
+          <div className="text-center mb-10"><div className="pill mx-auto w-fit mb-5">Open Roles</div><h2 className="display-md text-[#0A0F1C]">Current <span className="text-grad">Openings</span></h2></div>
           <div className="space-y-4 max-w-4xl mx-auto">
             {JOB_OPENINGS.map((job) => (
               <div
                 key={job.id}
-                className="bg-white rounded-2xl border border-slate-100 p-6 hover:border-blue-100 hover:shadow-lg transition-all duration-300 group"
+                className="bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:border-blue-100 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] transition-all duration-300 group"
               >
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                   <div>
-                    <h3 className="font-bold text-slate-900 text-lg group-hover:text-blue-700 transition-colors">{job.title}</h3>
-                    <div className="flex flex-wrap gap-4 mt-2 text-sm text-slate-400">
+                    <h3 className="font-bold text-[#0A0F1C] text-lg group-hover:text-[#2563EB] transition-colors">{job.title}</h3>
+                    <div className="flex flex-wrap gap-4 mt-2 text-sm text-[#94A3B8]">
                       <span className="flex items-center gap-1.5"><Briefcase size={13} />{job.department}</span>
                       <span className="flex items-center gap-1.5"><MapPin size={13} />{job.location}</span>
                       <span className="flex items-center gap-1.5"><Clock size={13} />{job.type}</span>
                     </div>
-                    <p className="mt-3 text-sm text-slate-500">{job.description}</p>
+                    <p className="mt-3 text-sm text-[#64748B]">{job.description}</p>
                   </div>
                   <div className="shrink-0">
-                    <span className="text-xs font-medium bg-blue-50 text-blue-700 rounded-full px-3 py-1 block whitespace-nowrap mb-3">{job.experience}</span>
+                    <span className="text-xs font-medium bg-blue-50 text-[#2563EB] rounded-full px-3 py-1 block whitespace-nowrap mb-3">{job.experience}</span>
                     <Link
                       href="/contact"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-800 whitespace-nowrap"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2563EB] hover:text-blue-800 whitespace-nowrap"
                     >
                       Apply Now <ArrowRight size={13} />
                     </Link>
@@ -97,7 +90,7 @@ export default function CareersPage() {
       {/* Hiring process */}
       <section className="section">
         <div className="container max-w-4xl">
-          <SectionHeader label="How We Hire" title="Our Hiring" highlight="Process" center className="mb-12" />
+          <div className="text-center mb-12"><div className="pill mx-auto w-fit mb-5">How We Hire</div><h2 className="display-md text-[#0A0F1C]">Our Hiring <span className="text-grad">Process</span></h2></div>
           <div className="grid sm:grid-cols-4 gap-6">
             {[
               { step: '01', title: 'Application', desc: 'Submit your CV and a brief note on why NexGen.' },
@@ -109,15 +102,15 @@ export default function CareersPage() {
                 <div className="w-14 h-14 rounded-full bg-gradient-to-br from-blue-600 to-cyan-400 flex items-center justify-center text-white font-extrabold text-lg mx-auto mb-4">
                   {step.step}
                 </div>
-                <h3 className="font-bold text-slate-900 mb-2">{step.title}</h3>
-                <p className="text-sm text-slate-500">{step.desc}</p>
+                <h3 className="font-bold text-[#0A0F1C] mb-2">{step.title}</h3>
+                <p className="text-sm text-[#64748B]">{step.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <CTASection title="Don't See the Right Role?" subtitle="We're always looking for exceptional talent. Send us your CV and tell us how you'd like to contribute." />
+      <CTASection />
     </>
   )
 }

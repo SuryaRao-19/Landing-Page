@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { TECHNOLOGIES } from '@/lib/data'
-import { SectionHeader } from '@/components/shared/section-header'
+import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'
 
 export const metadata: Metadata = {
@@ -10,48 +10,46 @@ export const metadata: Metadata = {
 
 const CATEGORIES = ['Languages', 'Frontend', 'Backend', 'Mobile', 'Cloud', 'DevOps', 'AI/ML', 'Databases']
 
+const TECH_ICONS: Record<string, string> = {
+  'React': '⚛️', 'Next.js': '▲', 'TypeScript': '🔷', 'Node.js': '🟢',
+  'Python': '🐍', 'Java': '☕', 'Go': '🔵', 'Rust': '⚙️',
+  'AWS': '☁️', 'Azure': '🔵', 'GCP': '🌐', 'Kubernetes': '☸️',
+  'Docker': '🐳', 'PostgreSQL': '🐘', 'MongoDB': '🍃', 'Redis': '🔴',
+  'TensorFlow': '🧠', 'PyTorch': '🔥', 'Vue.js': '💚', 'Angular': '🔴',
+  'Flutter': '💙', 'React Native': '📱', 'GraphQL': '💜', 'Terraform': '🏗️',
+  'Jenkins': '🔧', 'Kafka': '📨',
+}
+
 export default function TechnologiesPage() {
   return (
     <>
-      <section
-        className="pt-36 pb-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#F8FAFC 0%,#EFF6FF 100%)' }}
-      >
-        <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-        <div className="container relative z-10 text-center">
-          <SectionHeader
-            label="Technology Stack"
-            title="The Technologies That Power"
-            highlight="Our Solutions"
-            subtitle="We work with the most powerful, proven, and future-ready technologies to deliver exceptional enterprise solutions."
-            center
-          />
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Technology Stack"
+        title="The Technologies That Power"
+        highlight="Our Solutions"
+        subtitle="We work with the most powerful, proven, and future-ready technologies to deliver exceptional enterprise solutions."
+        breadcrumbs={[{ label: 'Technologies' }]}
+      />
 
-      <section className="section">
-        <div className="container space-y-16">
+      <section className="section bg-white">
+        <div className="container space-y-14">
           {CATEGORIES.map((cat) => {
             const items = TECHNOLOGIES.filter((t) => t.category === cat)
             return (
               <div key={cat}>
-                <h2 className="font-bold text-slate-900 text-xl mb-6 flex items-center gap-3">
-                  {cat}
-                  <span className="h-px flex-1 bg-slate-100" />
-                </h2>
-                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4">
+                <div className="flex items-center gap-4 mb-6">
+                  <h2 className="font-bold text-[#0A0F1C] text-lg whitespace-nowrap">{cat}</h2>
+                  <div className="h-px flex-1 bg-[#E2E8F0]" />
+                  <span className="text-xs font-semibold text-[#94A3B8]">{items.length} technologies</span>
+                </div>
+                <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
                   {items.map((tech) => (
                     <div
                       key={tech.name}
-                      className="flex flex-col items-center gap-2 p-4 bg-white rounded-2xl border border-slate-100 hover:border-blue-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 text-center"
+                      className="flex flex-col items-center gap-2 p-3.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[16px] hover:border-[#2563EB]/25 hover:shadow-[0_4px_16px_rgba(37,99,235,.08)] hover:-translate-y-0.5 hover:bg-white transition-all duration-200 text-center"
                     >
-                      <div
-                        className="w-10 h-10 rounded-xl flex items-center justify-center font-bold text-xs text-white"
-                        style={{ background: tech.color }}
-                      >
-                        {tech.name.slice(0, 2).toUpperCase()}
-                      </div>
-                      <span className="text-xs font-semibold text-slate-700 leading-tight">{tech.name}</span>
+                      <span className="text-2xl">{TECH_ICONS[tech.name] ?? '✦'}</span>
+                      <span className="text-[11px] font-semibold text-[#334155] leading-tight">{tech.name}</span>
                     </div>
                   ))}
                 </div>

@@ -1,46 +1,51 @@
 import { cn } from '@/lib/utils'
-import { SectionLabel } from '@/components/ui/badge'
 
 interface SectionHeaderProps {
   label?: string
   title: string
   highlight?: string
+  titleAfter?: string
   subtitle?: string
   center?: boolean
   dark?: boolean
+  large?: boolean
   className?: string
 }
 
 export function SectionHeader({
-  label, title, highlight, subtitle, center, dark, className,
+  label, title, highlight, titleAfter, subtitle, center, dark, large, className,
 }: SectionHeaderProps) {
   return (
-    <div className={cn(center && 'text-center', className)}>
+    <div className={cn(center && 'flex flex-col items-center', className)}>
       {label && (
-        <SectionLabel className={cn('mb-4', dark && 'bg-white/10 text-blue-200 border-white/20')}>
+        <div className={cn('pill mb-6', dark && 'pill-dark', center && 'text-center')}>
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-current opacity-70" aria-hidden />
           {label}
-        </SectionLabel>
+        </div>
       )}
       <h2
         className={cn(
-          'font-extrabold leading-tight tracking-tight',
-          'text-3xl sm:text-4xl lg:text-5xl',
-          dark ? 'text-white' : 'text-slate-900',
+          'font-extrabold',
+          large ? 'display-xl' : 'display-lg',
+          dark ? 'text-white' : 'text-[#0A0F1C]',
+          center && 'text-center',
         )}
       >
-        {title}{' '}
+        {title}
         {highlight && (
-          <span className={cn(dark ? 'text-cyan-400' : 'text-grad')}>
-            {highlight}
-          </span>
+          <>
+            {' '}
+            <span className="text-grad">{highlight}</span>
+          </>
         )}
+        {titleAfter && <> {titleAfter}</>}
       </h2>
       {subtitle && (
         <p
           className={cn(
-            'mt-4 text-lg leading-relaxed max-w-2xl',
-            center && 'mx-auto',
-            dark ? 'text-slate-300' : 'text-slate-500',
+            'mt-6 text-[1.125rem] leading-[1.82]',
+            center ? 'text-center max-w-2xl mx-auto' : 'max-w-xl',
+            dark ? 'text-slate-400' : 'text-[#64748B]',
           )}
         >
           {subtitle}

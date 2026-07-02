@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { Download, ArrowRight } from 'lucide-react'
-import { SectionHeader } from '@/components/shared/section-header'
+import { PageHero } from '@/components/shared/page-hero'
 
 export const metadata: Metadata = {
   title: 'Resources — Guides, Whitepapers & Tools',
@@ -24,29 +24,21 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function ResourcesPage() {
   return (
     <>
-      <section
-        className="pt-36 pb-20 relative overflow-hidden"
-        style={{ background: 'linear-gradient(160deg,#F8FAFC 0%,#EEF2FF 100%)' }}
-      >
-        <div className="absolute inset-0 bg-grid opacity-50" aria-hidden />
-        <div className="container relative z-10 text-center">
-          <SectionHeader
-            label="Resources"
-            title="Free Enterprise Technology"
-            highlight="Resources"
-            subtitle="Practical guides, frameworks, and tools to help you navigate technology decisions with confidence."
-            center
-          />
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Resources"
+        title="Free Enterprise Technology"
+        highlight="Resources"
+        subtitle="Practical guides, frameworks, and tools to help you navigate technology decisions with confidence."
+        breadcrumbs={[{ label: 'Resources' }]}
+      />
 
-      <section className="section">
+      <section className="section bg-white">
         <div className="container">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {RESOURCES.map((r) => (
               <div
                 key={r.title}
-                className="bg-white rounded-2xl border border-slate-100 p-6 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
+                className="bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] hover:-translate-y-1 transition-all duration-300 group"
               >
                 <div className="flex items-center justify-between mb-4">
                   <span
@@ -55,12 +47,12 @@ export default function ResourcesPage() {
                   >
                     {r.category}
                   </span>
-                  <span className="text-xs text-slate-400">{r.type} · {r.pages} pages</span>
+                  <span className="text-xs text-[#94A3B8]">{r.type} · {r.pages} pages</span>
                 </div>
-                <h3 className="font-bold text-slate-900 text-base mb-4 group-hover:text-blue-700 transition-colors">{r.title}</h3>
+                <h3 className="font-bold text-[#0A0F1C] text-base mb-4 group-hover:text-[#2563EB] transition-colors">{r.title}</h3>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#2563EB] hover:text-blue-800 transition-colors"
                 >
                   <Download size={14} /> Download Free
                 </Link>
@@ -68,9 +60,9 @@ export default function ResourcesPage() {
             ))}
           </div>
 
-          <div className="mt-12 text-center bg-slate-50 rounded-3xl p-10">
-            <h2 className="font-bold text-slate-900 text-2xl mb-3">Looking for Something Specific?</h2>
-            <p className="text-slate-500 mb-6">Our team can create custom research reports and benchmarking studies tailored to your industry and use case.</p>
+          <div className="mt-12 text-center bg-[#F8FAFC] rounded-3xl p-10">
+            <h2 className="font-bold text-[#0A0F1C] text-2xl mb-3">Looking for Something Specific?</h2>
+            <p className="text-[#64748B] mb-6">Our team can create custom research reports and benchmarking studies tailored to your industry and use case.</p>
             <Link href="/contact" className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-blue-700 transition-colors text-sm">
               Request Custom Research <ArrowRight size={14} />
             </Link>
