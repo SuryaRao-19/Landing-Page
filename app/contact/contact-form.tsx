@@ -3,168 +3,206 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { Send, CheckCircle2 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Send, CheckCircle2, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { contactSchema, type ContactFormData } from '@/lib/contact-schema'
 
-const schema = z.object({
-  name:     z.string().min(2, 'Name must be at least 2 characters'),
-  email:    z.string().email('Please enter a valid email address'),
-  company:  z.string().min(2, 'Company name required'),
-  phone:    z.string().optional(),
-  service:  z.string().min(1, 'Please select a service'),
-  budget:   z.string().optional(),
-  message:  z.string().min(20, 'Please tell us a bit more (min 20 characters)'),
-})
-
-type FormData = z.infer<typeof schema>
+const schema = contactSchema
+type FormData = ContactFormData
 
 const SERVICES = [
-  'Artificial Intelligence', 'Cloud Solutions', 'Software Development',
-  'Web Development', 'Mobile Apps', 'Cybersecurity', 'DevOps',
-  'Data Engineering', 'UI/UX Design', 'Business Automation', 'IT Consulting', 'Other',
+  'Artificial Intelligence','Cloud Solutions','Software Development',
+  'Web Development','Mobile Apps','Cybersecurity','DevOps',
+  'Data Engineering','UI/UX Design','Business Automation','IT Consulting','Other',
 ]
+const BUDGETS = ['Under ₹10 Lakhs','₹10–50 Lakhs','₹50 Lakhs–1 Crore','Above ₹1 Crore','Not sure yet']
 
-const BUDGETS = ['Under ₹10 Lakhs', '₹10–50 Lakhs', '₹50 Lakhs–1 Crore', 'Above ₹1 Crore', 'Not sure yet']
-
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-  label: string; error?: string
-}
-function Field({ label, error, className, ...props }: InputProps) {
+/* ── Premium field ───────────────────────────── */
+function Field({
+  label, error, className, ...props
+}: React.InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string }) {
   return (
-    <label className={cn('block', className)}>
-      <span className="text-sm font-medium text-slate-700 mb-1.5 block">{label}</span>
-      <input
-        className={cn(
-          'w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors',
-          'placeholder:text-slate-300 bg-slate-50 focus:bg-white',
-          error
-            ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
-            : 'border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100',
+    <div className={cn('group', className)}>
+      <label className="block text-[.8125rem] font-semibold text-[#475569] mb-2">{label}</label>
+      <div className="relative">
+        <input
+          className={cn(
+            'input-base text-[.875rem]',
+            error && 'input-error',
+          )}
+          {...props}
+        />
+      </div>
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+            className="flex items-center gap-1.5 mt-1.5 text-[11.5px] text-red-500 font-medium"
+          >
+            <AlertCircle size={11} /> {error}
+          </motion.p>
         )}
-        {...props}
-      />
-      {error && <span className="text-xs text-red-500 mt-1 block">{error}</span>}
-    </label>
+      </AnimatePresence>
+    </div>
   )
 }
 
+function SelectField({
+  label, error, children, className, ...props
+}: React.SelectHTMLAttributes<HTMLSelectElement> & { label: string; error?: string }) {
+  return (
+    <div className={className}>
+      <label className="block text-[.8125rem] font-semibold text-[#475569] mb-2">{label}</label>
+      <select
+        className={cn(
+          'input-base text-[.875rem] cursor-pointer appearance-none',
+          'bg-[image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%2394A3B8\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E")]',
+          'bg-no-repeat bg-[right_14px_center]',
+          error && 'input-error',
+        )}
+        {...props}
+      >
+        {children}
+      </select>
+      <AnimatePresence>
+        {error && (
+          <motion.p
+            initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+            className="flex items-center gap-1.5 mt-1.5 text-[11.5px] text-red-500 font-medium"
+          >
+            <AlertCircle size={11} /> {error}
+          </motion.p>
+        )}
+      </AnimatePresence>
+    </div>
+  )
+}
+
+/* ── Success state ───────────────────────────── */
+function SuccessState() {
+  return (
+    <motion.div
+      initial={{ opacity: 0, scale: .95 }} animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: .4, ease: [.22, 1, .36, 1] }}
+      className="py-14 text-center"
+    >
+      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 flex items-center justify-center mx-auto mb-5 shadow-[0_8px_24px_rgba(16,185,129,.3)]">
+        <CheckCircle2 size={28} className="text-white" />
+      </div>
+      <h3 className="font-extrabold text-[#0A0F1C] text-xl mb-2 tracking-tight">Message Received</h3>
+      <p className="text-[#64748B] text-sm leading-relaxed max-w-xs mx-auto">
+        Thank you for reaching out. A senior consultant will contact you within <strong className="text-[#0A0F1C]">2 business hours.</strong>
+      </p>
+      <div className="mt-6 inline-flex items-center gap-2 text-xs text-[#94A3B8]">
+        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+        Our team has been notified
+      </div>
+    </motion.div>
+  )
+}
+
+/* ── Form ────────────────────────────────────── */
 export function ContactForm() {
   const [submitted, setSubmitted] = useState(false)
-  const {
-    register, handleSubmit, formState: { errors, isSubmitting },
-  } = useForm<FormData>({ resolver: zodResolver(schema) })
+  const [serverError, setServerError] = useState<string | null>(null)
+  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<FormData>({
+    resolver: zodResolver(schema),
+  })
 
   async function onSubmit(data: FormData) {
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1200))
-    console.log('Form data:', data)
-    setSubmitted(true)
+    setServerError(null)
+    try {
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+      if (!res.ok) {
+        const body = await res.json().catch(() => null)
+        throw new Error(body?.error ?? 'Something went wrong. Please try again.')
+      }
+      setSubmitted(true)
+    } catch (err) {
+      setServerError(
+        err instanceof Error ? err.message : 'Network error — please check your connection and try again.',
+      )
+    }
   }
 
-  if (submitted) {
-    return (
-      <div className="text-center py-12">
-        <CheckCircle2 size={48} className="text-teal-500 mx-auto mb-4" />
-        <h3 className="font-bold text-slate-900 text-xl mb-2">Message Sent!</h3>
-        <p className="text-slate-500 text-sm">Thank you for reaching out. Our team will get back to you within 24 business hours.</p>
-      </div>
-    )
-  }
+  if (submitted) return <SuccessState />
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-5">
-      <div className="grid sm:grid-cols-2 gap-5">
-        <Field
-          label="Full Name *"
-          placeholder="Rajesh Kumar"
-          autoComplete="name"
-          {...register('name')}
-          error={errors.name?.message}
-        />
-        <Field
-          label="Work Email *"
-          type="email"
-          placeholder="rajesh@company.com"
-          autoComplete="email"
-          {...register('email')}
-          error={errors.email?.message}
-        />
+    <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label="Full Name *" placeholder="Rajesh Kumar" autoComplete="name" {...register('name')} error={errors.name?.message} />
+        <Field label="Work Email *" type="email" placeholder="rajesh@company.com" autoComplete="email" {...register('email')} error={errors.email?.message} />
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
-        <Field
-          label="Company *"
-          placeholder="Your Company Ltd."
-          autoComplete="organization"
-          {...register('company')}
-          error={errors.company?.message}
-        />
-        <Field
-          label="Phone Number"
-          type="tel"
-          placeholder="+91 98765 43210"
-          autoComplete="tel"
-          {...register('phone')}
-          error={errors.phone?.message}
-        />
+      <div className="grid sm:grid-cols-2 gap-4">
+        <Field label="Company *" placeholder="Company Ltd." autoComplete="organization" {...register('company')} error={errors.company?.message} />
+        <Field label="Phone" type="tel" placeholder="+91 98765 43210" autoComplete="tel" {...register('phone')} error={errors.phone?.message} />
       </div>
 
-      <div className="grid sm:grid-cols-2 gap-5">
-        <label className="block">
-          <span className="text-sm font-medium text-slate-700 mb-1.5 block">Service of Interest *</span>
-          <select
-            className={cn(
-              'w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors bg-slate-50 focus:bg-white',
-              errors.service
-                ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
-                : 'border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100',
-            )}
-            {...register('service')}
-          >
-            <option value="">Select a service…</option>
-            {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
-          </select>
-          {errors.service && <span className="text-xs text-red-500 mt-1 block">{errors.service.message}</span>}
-        </label>
-
-        <label className="block">
-          <span className="text-sm font-medium text-slate-700 mb-1.5 block">Budget Range</span>
-          <select
-            className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm outline-none transition-colors bg-slate-50 focus:bg-white focus:border-blue-400 focus:ring-2 focus:ring-blue-100"
-            {...register('budget')}
-          >
-            <option value="">Select budget…</option>
-            {BUDGETS.map((b) => <option key={b} value={b}>{b}</option>)}
-          </select>
-        </label>
+      <div className="grid sm:grid-cols-2 gap-4">
+        <SelectField label="Service of Interest *" {...register('service')} error={errors.service?.message}>
+          <option value="">Select a service…</option>
+          {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
+        </SelectField>
+        <SelectField label="Budget Range" {...register('budget')}>
+          <option value="">Select budget…</option>
+          {BUDGETS.map((b) => <option key={b} value={b}>{b}</option>)}
+        </SelectField>
       </div>
 
-      <label className="block">
-        <span className="text-sm font-medium text-slate-700 mb-1.5 block">Your Message *</span>
+      <div>
+        <label className="block text-[.8125rem] font-semibold text-[#475569] mb-2">Message *</label>
         <textarea
           rows={5}
-          placeholder="Briefly describe your project, challenge, or what you'd like to discuss…"
-          className={cn(
-            'w-full px-4 py-3 rounded-xl border text-sm outline-none transition-colors resize-none bg-slate-50 focus:bg-white',
-            errors.message
-              ? 'border-red-300 focus:border-red-400 focus:ring-2 focus:ring-red-100'
-              : 'border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100',
-          )}
+          placeholder="Briefly describe your project, challenge, or goals…"
+          className={cn('input-base text-[.875rem] resize-none', errors.message && 'input-error')}
           {...register('message')}
         />
-        {errors.message && <span className="text-xs text-red-500 mt-1 block">{errors.message.message}</span>}
-      </label>
+        <AnimatePresence>
+          {errors.message && (
+            <motion.p
+              initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+              className="flex items-center gap-1.5 mt-1.5 text-[11.5px] text-red-500 font-medium"
+            >
+              <AlertCircle size={11} /> {errors.message.message}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </div>
 
-      <p className="text-xs text-slate-400">
-        By submitting this form you agree to our{' '}
-        <a href="/privacy-policy" className="text-blue-500 hover:underline">Privacy Policy</a>.
-        We never share your data with third parties.
+      <p className="text-[11.5px] text-[#94A3B8] leading-relaxed">
+        By submitting you agree to our{' '}
+        <a href="/privacy-policy" className="text-[#2563EB] hover:underline">Privacy Policy</a>.
+        {' '}We never share your data with third parties.
       </p>
 
-      <Button type="submit" loading={isSubmitting} size="lg" className="w-full sm:w-auto">
-        <Send size={16} /> Send Message
+      <AnimatePresence>
+        {serverError && (
+          <motion.div
+            role="alert"
+            initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+            className="flex items-start gap-2 rounded-[12px] border border-red-200 bg-red-50 px-4 py-3 text-[13px] text-red-600"
+          >
+            <AlertCircle size={15} className="mt-0.5 shrink-0" />
+            <span>{serverError}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Button
+        type="submit"
+        loading={isSubmitting}
+        size="lg"
+        iconRight={<Send size={15} />}
+        className="w-full sm:w-auto"
+      >
+        Send Message
       </Button>
     </form>
   )

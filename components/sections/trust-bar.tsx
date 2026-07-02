@@ -1,45 +1,109 @@
 'use client'
 
-import { motion } from 'framer-motion'
-import { HOME_STATS } from '@/lib/data'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useInView } from 'framer-motion'
 
-const LOGO_NAMES = ['TCS', 'Infosys', 'Wipro', 'Accenture', 'HCL Tech', 'Zoho', 'Cognizant', 'Freshworks']
+const CLIENTS = [
+  'Infosys', 'TCS', 'Wipro', 'HCL', 'Tech Mahindra',
+  'Reliance', 'Adani', 'HDFC', 'ICICI', 'Bajaj',
+  'Flipkart', 'Zomato', 'Paytm', 'PhonePe', 'Jio',
+  'TATA', 'Airtel', 'Mahindra', 'Godrej', 'L&T',
+]
+
+const STATS = [
+  { value: 500,  suffix: '+',   label: 'Enterprise Clients',  color: '#2563EB' },
+  { value: 15,   suffix: '+',   label: 'Years of Excellence', color: '#0D9488' },
+  { value: 1000, suffix: '+',   label: 'Projects Delivered',  color: '#7C3AED' },
+  { value: 25,   suffix: '+',   label: 'Countries Served',    color: '#06B6D4' },
+  { value: 99.9, suffix: '%',   label: 'Service Availability',color: '#F59E0B' },
+]
+
+const ease = [0.22, 1, 0.36, 1] as const
+
+function AnimatedCounter({ target, suffix, color }: { target: number; suffix: string; color: string }) {
+  const [count, setCount] = useState(0)
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-40px' })
+
+  useEffect(() => {
+    if (!inView) return
+    const duration = 1600
+    const start = performance.now()
+    const isDecimal = target % 1 !== 0
+
+    const step = (now: number) => {
+      const elapsed = Math.min((now - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - elapsed, 3)
+      const current = isDecimal ? parseFloat((eased * target).toFixed(1)) : Math.round(eased * target)
+      setCount(current)
+      if (elapsed < 1) requestAnimationFrame(step)
+    }
+    requestAnimationFrame(step)
+  }, [inView, target])
+
+  const display = target % 1 !== 0 ? count.toFixed(1) : count >= 1000 ? `${(count / 1000).toFixed(0)},${String(count % 1000).padStart(3, '0')}` : String(count)
+
+  return (
+    <span ref={ref} className="font-extrabold text-[2.5rem] leading-none tracking-[-0.05em]" style={{ color }}>
+      {display}{suffix}
+    </span>
+  )
+}
 
 export function TrustBar() {
   return (
-    <section className="bg-[#0A1628] py-16" aria-label="Trust signals">
+    <section className="py-14 bg-white border-y border-[#F1F5F9]" aria-label="Trusted by leading companies">
       <div className="container">
-        <motion.p
-          className="text-center text-slate-400 text-sm font-semibold uppercase tracking-widest mb-8"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-        >
-          Trusted by industry leaders across India &amp; worldwide
-        </motion.p>
 
-        {/* Logo strip */}
-        <div className="flex flex-wrap items-center justify-center gap-8 mb-14 opacity-40 grayscale">
-          {LOGO_NAMES.map((name) => (
-            <span key={name} className="text-white font-bold text-lg tracking-tight">{name}</span>
-          ))}
+        {/* Label */}
+        <p className="text-center text-[0.6875rem] text-[#64748B] uppercase tracking-widest font-bold mb-8">
+          Trusted by 500+ enterprises across India &amp; 25+ countries worldwide
+        </p>
+
+        {/* Logo ticker */}
+        <div className="overflow-hidden relative mb-12">
+          <div
+            className="absolute left-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
+            style={{ background: 'linear-gradient(90deg, white 0%, transparent 100%)' }}
+          />
+          <div
+            className="absolute right-0 top-0 bottom-0 w-32 z-10 pointer-events-none"
+            style={{ background: 'linear-gradient(270deg, white 0%, transparent 100%)' }}
+          />
+
+          <motion.div
+            className="flex gap-12 w-max"
+            animate={{ x: ['0%', '-50%'] }}
+            transition={{ duration: 40, repeat: Infinity, ease: 'linear', repeatType: 'loop' }}
+            aria-hidden
+          >
+            {[...CLIENTS, ...CLIENTS, ...CLIENTS, ...CLIENTS].map((name, i) => (
+              <div key={i} className="shrink-0 flex items-center gap-2 select-none">
+                <div className="w-5 h-5 rounded-full bg-[#E2E8F0]" />
+                <span className="font-bold text-[0.875rem] tracking-[-0.02em] text-[#64748B]">
+                  {name}
+                </span>
+              </div>
+            ))}
+          </motion.div>
         </div>
 
-        {/* Stats grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-px bg-white/8 rounded-2xl overflow-hidden">
-          {HOME_STATS.map((stat, i) => (
+        {/* Stats */}
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+          {STATS.map(({ value, suffix, label, color }, i) => (
             <motion.div
-              key={stat.label}
-              className="bg-[#0D1F3C] px-6 py-8 text-center"
-              initial={{ opacity: 0, y: 20 }}
+              key={label}
+              initial={{ opacity: 0, y: 18 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * .08 }}
+              transition={{ delay: i * 0.08, duration: 0.55, ease }}
+              className="bg-white border border-[#E8EEF4] hover:shadow-[0_6px_28px_rgba(0,0,0,.07)] hover:border-[#E2E8F0] hover:-translate-y-1 transition-all duration-300"
+              style={{ borderRadius: '22px', boxShadow: '0 1px 3px rgba(0,0,0,.04), 0 4px 12px rgba(0,0,0,.04)' }}
             >
-              <p className="font-extrabold text-3xl text-white">
-                {stat.value}{stat.suffix}
-              </p>
-              <p className="text-slate-400 text-xs mt-2">{stat.label}</p>
+              <div className="text-center" style={{ padding: '28px' }}>
+                <AnimatedCounter target={value} suffix={suffix} color={color} />
+                <p className="text-[0.875rem] text-[#64748B] mt-2.5 font-medium">{label}</p>
+              </div>
             </motion.div>
           ))}
         </div>
