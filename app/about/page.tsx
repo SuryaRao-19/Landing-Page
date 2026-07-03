@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Target, Code2, Eye, Lightbulb, Handshake, Leaf } from 'lucide-react'
+import { Target, Telescope, Code2, Eye, Lightbulb, Handshake, Leaf } from 'lucide-react'
 import { CTASection } from '@/components/sections/cta-section'
 import { PageHero } from '@/components/shared/page-hero'
 
@@ -132,18 +132,18 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-5">
             {[
               {
-                icon: '🎯',
+                icon: Target,
                 bg: 'from-blue-500 to-cyan-500',
                 title: 'Our Mission',
                 text: 'To democratize enterprise-grade technology for Indian and global businesses, enabling every organization — regardless of size — to compete and thrive in the digital economy.',
               },
               {
-                icon: '🔭',
+                icon: Telescope,
                 bg: 'from-violet-500 to-blue-500',
                 title: 'Our Vision',
                 text: 'To be the most trusted technology partner for enterprises across Asia, the Middle East, and beyond — recognized for engineering excellence, client outcomes, and responsible innovation.',
               },
-            ].map(({ icon, bg, title, text }, i) => (
+            ].map(({ icon: Icon, bg, title, text }, i) => (
               <motion.div
                 key={title}
                 initial={{ opacity: 0, y: 20 }}
@@ -152,8 +152,8 @@ export default function AboutPage() {
                 transition={{ delay: i * .15, duration: .5 }}
                 className="bg-white border border-[#E2E8F0] rounded-[24px] p-8 hover:shadow-[0_8px_32px_rgba(0,0,0,.07)] transition-shadow"
               >
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${bg} flex items-center justify-center text-xl mb-6 shadow-sm`}>
-                  {icon}
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${bg} flex items-center justify-center text-white mb-6 shadow-sm`}>
+                  <Icon size={22} aria-hidden />
                 </div>
                 <h2 className="font-bold text-[#0A0F1C] text-xl mb-4 tracking-tight">{title}</h2>
                 <p className="text-[#64748B] leading-[1.8]">{text}</p>

@@ -70,12 +70,14 @@ needed **no change**:
    on **secondary pages**: `technologies` (tech-stack logos), `portfolio`, `solutions`, `careers`,
    `careers/internship`, and the About **mission/vision** block. See “Still remaining” below.
 
-## Still remaining (emoji on secondary pages)
-Not yet converted — flagged, not silently claimed done:
-- **`app/technologies/page.tsx`** — ~30 tech icons (⚛️🐍☕…) are brand logos; lucide has no brand
-  marks, so these need a real logo set (e.g. Simple Icons), not generic icons. Recommend that route.
-- **`portfolio`, `solutions`, `careers`, `careers/internship`, About mission/vision** — category icons
-  in local arrays; straightforward lucide swaps (like P7). Happy to do these on your OK.
+## Secondary-page emoji — now COMPLETED
+All remaining emoji have been converted; **the site is now emoji-free** (verified by a repo-wide
+sweep — only monochrome symbol glyphs `✓`/`✦` remain as list/fallback marks):
+- **`portfolio`, `solutions`, `careers`, `careers/internship`, About mission/vision** — category
+  icons → lucide components in brand colors (Brain/Cloud/ShieldCheck/Wallet/HeartPulse/Target/…).
+- **`app/technologies/page.tsx`** — lucide has no brand logos, so each tech now renders a clean
+  **brand-colored monogram** (e.g. “Next.js” → “Ne”, “AWS” → “AWS”) in a tinted tile, rather than a
+  generic icon that wouldn’t convey the specific technology.
 2. **Footer social links repointed** to brand-consistent handles: LinkedIn
    `https://www.linkedin.com/company/nexgen-technologies`, X `https://x.com/NexGenTechIN` (matches the
    `@NexGenTechIN` metadata), GitHub `https://github.com/nexgen-technologies`; the “Twitter” label is

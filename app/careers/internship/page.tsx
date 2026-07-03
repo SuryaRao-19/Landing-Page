@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'
+import { Code2, Brain, Cloud, Palette, ShieldCheck } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Internship Program — NexGen Technologies',
@@ -8,11 +9,11 @@ export const metadata: Metadata = {
 }
 
 const TRACKS = [
-  { title: 'Software Engineering', icon: '💻', duration: '3–6 months', skills: ['React / Next.js', 'Node.js / Python', 'Database design', 'Code reviews'] },
-  { title: 'AI & Data Science', icon: '🧠', duration: '3–6 months', skills: ['Python & ML libraries', 'Model training & evaluation', 'Data pipelines', 'Research papers'] },
-  { title: 'Cloud & DevOps', icon: '☁️', duration: '3–6 months', skills: ['AWS / Azure basics', 'Docker & Kubernetes', 'CI/CD pipelines', 'Infrastructure as Code'] },
-  { title: 'UI/UX Design', icon: '🎨', duration: '3–6 months', skills: ['Figma & design systems', 'User research', 'Prototyping', 'Accessibility'] },
-  { title: 'Cybersecurity', icon: '🔒', duration: '3–6 months', skills: ['Security fundamentals', 'VAPT basics', 'Compliance frameworks', 'Threat modeling'] },
+  { title: 'Software Engineering', icon: Code2, duration: '3–6 months', skills: ['React / Next.js', 'Node.js / Python', 'Database design', 'Code reviews'] },
+  { title: 'AI & Data Science', icon: Brain, duration: '3–6 months', skills: ['Python & ML libraries', 'Model training & evaluation', 'Data pipelines', 'Research papers'] },
+  { title: 'Cloud & DevOps', icon: Cloud, duration: '3–6 months', skills: ['AWS / Azure basics', 'Docker & Kubernetes', 'CI/CD pipelines', 'Infrastructure as Code'] },
+  { title: 'UI/UX Design', icon: Palette, duration: '3–6 months', skills: ['Figma & design systems', 'User research', 'Prototyping', 'Accessibility'] },
+  { title: 'Cybersecurity', icon: ShieldCheck, duration: '3–6 months', skills: ['Security fundamentals', 'VAPT basics', 'Compliance frameworks', 'Threat modeling'] },
 ]
 
 export default function InternshipPage() {
@@ -33,7 +34,7 @@ export default function InternshipPage() {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {TRACKS.map((track) => (
               <div key={track.title} className="bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] hover:-translate-y-1 transition-all duration-300">
-                <div className="text-3xl mb-4">{track.icon}</div>
+                <track.icon size={28} className="text-[#2563EB] mb-4" aria-hidden />
                 <h3 className="font-bold text-[#0A0F1C] text-lg mb-1">{track.title}</h3>
                 <p className="text-sm text-teal-600 font-medium mb-4">{track.duration}</p>
                 <ul className="space-y-2">
