@@ -73,6 +73,24 @@
 /* ── Reset ────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
 
+/* ── Perf: skip rendering off-screen sections ──────
+   Defers layout/paint/render of below-the-fold sections until they approach the
+   viewport, cutting initial main-thread work (SSR HTML is untouched, so SEO and
+   CLS are unaffected). `auto` intrinsic size lets the browser remember the real
+   height after first paint, so there's no scroll jump. Not applied to sections
+   containing `position: sticky` (containment would break the sticky). */
+.cv-auto { content-visibility: auto; contain-intrinsic-size: auto 720px; }
+
+/* ── Respect reduced-motion ────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 html {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;

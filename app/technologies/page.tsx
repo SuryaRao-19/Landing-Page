@@ -10,14 +10,12 @@ export const metadata: Metadata = {
 
 const CATEGORIES = ['Languages', 'Frontend', 'Backend', 'Mobile', 'Cloud', 'DevOps', 'AI/ML', 'Databases']
 
-const TECH_ICONS: Record<string, string> = {
-  'React': '⚛️', 'Next.js': '▲', 'TypeScript': '🔷', 'Node.js': '🟢',
-  'Python': '🐍', 'Java': '☕', 'Go': '🔵', 'Rust': '⚙️',
-  'AWS': '☁️', 'Azure': '🔵', 'GCP': '🌐', 'Kubernetes': '☸️',
-  'Docker': '🐳', 'PostgreSQL': '🐘', 'MongoDB': '🍃', 'Redis': '🔴',
-  'TensorFlow': '🧠', 'PyTorch': '🔥', 'Vue.js': '💚', 'Angular': '🔴',
-  'Flutter': '💙', 'React Native': '📱', 'GraphQL': '💜', 'Terraform': '🏗️',
-  'Jenkins': '🔧', 'Kafka': '📨',
+// Brand logos aren't in a generic icon set, so we render a clean brand-colored
+// monogram from the tech name (e.g. "Next.js" → "Ne", "AWS" → "AWS").
+function monogram(name: string): string {
+  const s = name.replace(/[^a-zA-Z0-9]/g, '')
+  if (s.length <= 3) return s.toUpperCase()
+  return s.charAt(0).toUpperCase() + s.charAt(1).toLowerCase()
 }
 
 export default function TechnologiesPage() {
@@ -48,7 +46,7 @@ export default function TechnologiesPage() {
                       key={tech.name}
                       className="flex flex-col items-center gap-2 p-3.5 bg-[#F8FAFC] border border-[#E2E8F0] rounded-[16px] hover:border-[#2563EB]/25 hover:shadow-[0_4px_16px_rgba(37,99,235,.08)] hover:-translate-y-0.5 hover:bg-white transition-all duration-200 text-center"
                     >
-                      <span className="text-2xl">{TECH_ICONS[tech.name] ?? '✦'}</span>
+                      <span className="w-9 h-9 flex items-center justify-center rounded-[10px] text-[13px] font-extrabold" style={{ color: tech.color, background: `${tech.color}14` }} aria-hidden>{monogram(tech.name)}</span>
                       <span className="text-[11px] font-semibold text-[#334155] leading-tight">{tech.name}</span>
                     </div>
                   ))}

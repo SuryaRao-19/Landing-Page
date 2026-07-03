@@ -95,5 +95,106 @@ Reason: current data parses fine; defensive-only.
 ### L3 — Trust-bar client names/logos are placeholders
 `trust-bar.tsx:6-11` lists real company names with generic grey-dot "logos".
 Reason: content/branding decision — out of scope per guardrails (contrast of the text is fixed under H3).
-</content>
-</invoke>
+
+---
+
+# Pass 2 — 2026-07-03 (audit-gaps-then-finish)
+
+Re-audited the current working tree (which already carried the Pass-1 fixes above plus later
+commits). Method: `next build` + `eslint` + CDP mobile-emulation overflow sweep across 9 pages ×
+{375, 768, 1024}px + Lighthouse mobile. New findings and their disposition:
+
+## HIGH
+
+### P2-H1 — ESLint error: setState synchronously in an effect — [FIXED]
+`components/layout/navbar.tsx:163` — `useEffect(() => { setMobileOpen(false); setOpenMenu(null) }, [pathname])`
+tripped React 19’s `react-hooks/set-state-in-effect` rule (the one hard **error** in the build; it
+had survived Pass 1 as a known issue). Fix: reset the menus **during render** using React’s
+documented “adjust state when a value changes” pattern (`if (pathname !== prevPath) { … }`), removing
+the cascading re-render. `eslint` is now **0 errors / 0 warnings**.
+
+### P2-H2 — White-on-white invisible CTA (AI showcase) — [FIXED]
+`components/sections/ai-showcase.tsx:139` — the “Talk to an AI Expert” secondary CTA used
+`<ButtonLink variant="outline" …>` whose base carries `bg-white`, plus a `text-white` override in
+`className` → **white text on a white button** (label invisible; ~1:1 contrast) sitting on the dark
+`bg-dark-mesh` section. Automated audits missed it (the button’s own background is white, so the
+text/background pair “passes”, and it renders below the mobile fold); caught by **visual
+verification** at 1280px. Fix: add `bg-transparent` to the `className` (twMerge overrides the
+variant’s `bg-white`) so it’s a legible ghost button. Documented for reuse in `ui-polish-changes.md`.
+
+## MEDIUM
+
+### P2-M1 — Testimonials cards overflow the viewport at 375px (+47px) — [FIXED]
+`components/sections/testimonials-section.tsx:34` — the grid was `grid md:grid-cols-2 lg:grid-cols-3`
+with **no base `grid-cols-1`**, so on mobile the single implicit `auto` track grew to the card’s
+max-content (402px), stretching the whole document to 422px (horizontal scroll on every phone). This
+regressed after the “page content updates” commit lengthened card content. Fix: add `grid-cols-1`
+(`minmax(0,1fr)`) so cards shrink to the container.
+
+### P2-M2 — Mobile drawer: no Escape / no scroll-lock — [FIXED]
+`components/layout/navbar.tsx` — partially closes out Pass-1 **M2**. The open drawer now locks
+background scroll and closes on `Escape`. (A full focus-trap + focus-restore remains deferred — see
+below.)
+
+## LOW
+
+### P2-L1 — AI Showcase entrance animation overflows at 375px (+10px) — [FIXED]
+`components/sections/ai-showcase.tsx` — the content column enters from `x:30`; before scroll-in the
+transform poked ~10px past the viewport (transforms contribute to scroll width). Fix: `overflow-hidden`
+on the section (+ defensive base `grid-cols-1`).
+
+### P2-L2 — About “Our Story” entrance animation overflows at 375px (+4px) — [FIXED]
+`app/about/page.tsx` — same cause (`x:24` entrance). Fix: `overflow-hidden` on the section (+ base
+`grid-cols-1`).
+
+### P2-L3 — Dead code: 18 unused imports / vars — [FIXED]
+Removed unused `lucide-react`/`next/link`/`@/lib/utils` imports and two unused `map` index vars across
+`about`, `blog`, `careers/internship`, `case-studies` (list + `[slug]`), `not-found`, and
+`services/[slug]`. Clears all 18 `no-unused-vars` warnings.
+
+### P2-L4 — Corrupted trailing lines in this file — [FIXED]
+`bugs-found.md` ended with stray `</content>`/`</invoke>` markup leaked from a prior session’s tool
+output. Removed.
+
+## Verified NOT a bug (checked, no action)
+- **FAQ answers** — `faq-section.tsx` is a correct single-open accordion; every question renders its
+  own answer. The reported “only first answer renders” bug is not present in the current code.
+- **Dead `#` links** — none exist anywhere in `app/` or `components/`.
+
+## Still deferred (unchanged from Pass 1, + new)
+Pass-1 **M1** (OG image), remainder of **M2** (drawer focus-trap/restore), **M3** (array-index keys),
+**M4** (duplicate `"TF"` code), **M5** (inline-style padding), **L1** (unused boilerplate SVGs), **L3**
+(placeholder client names). New content/brand items flagged in `ui-polish-changes.md`: decorative
+SVG/About emoji, footer social handles. Reason for all: content/brand decisions or cosmetic-only, no
+correctness or accessibility impact, and outside a focused polish/hardening diff.
+
+---
+
+# Pass 3 — automated tests + CI (2026-07-03)
+
+Added a regression test suite (`tests/`, run with `npm test`) using the already-present
+`puppeteer-core` + system Chrome + Node's built-in `node:test` runner, plus `axe-core` for a11y:
+- **`overflow.test.mjs`** — asserts 0 horizontal overflow on 6 pages × {375, 768, 1024}px (codifies
+  the mobile bug this project kept regressing).
+- **`a11y.test.mjs`** — runs axe-core on `/` and `/contact` (the form page), failing on any
+  serious/critical violation. It **settles framer-motion `whileInView` animations first** (they're
+  JS-driven, so a `prefers-reduced-motion` CSS query does not stop them) to avoid axe reading text
+  mid-fade and reporting false contrast failures.
+
+CI: **`.github/workflows/ci.yml`** runs lint → build → the tests → **Lighthouse CI** (`lighthouserc.json`,
+budgets: performance ≥ 0.80, accessibility/best-practices/SEO = 1.0) on every push to `main` and PR.
+(Perf floor is 0.80 because `/contact` measures ~84 vs the homepage ~88; a11y/BP/SEO are strict 100.)
+
+## WCAG AA color-contrast — surfaced by the new axe gate, now [FIXED]
+The stricter axe run (desktop viewport, full ruleset) found real AA contrast failures that the earlier
+Lighthouse pass (mobile, homepage-only, subset of rules) had missed. All fixed — accessibility-required
+contrast shifts, permitted by the branding guardrail:
+- **`trust-bar.tsx`** — stat numbers `#06B6D4`→`#0E7490` (2.42→≈4.7:1) and `#F59E0B`→`#B45309`
+  (2.14→≈4.9:1) on white (large-text needs 3:1).
+- **`why-us.tsx`** — stat sublabels were the brand color at `opacity:0.65` (2.0–2.9:1) → now solid
+  `#475569` slate (≈7:1).
+- **`testimonials-section.tsx`** — metric-chip sublabels `#93C5FD` on `#EFF6FF` (1.65:1) → `#475569`.
+- **`app/contact/page.tsx`** — confidentiality badge `emerald-600`→`emerald-700` on `emerald-50`
+  (3.46→≈5.3:1); quick-card sub-text `#64748B`→`#475569` on the blue-tinted card (4.37→≈5.8:1).
+
+Result: `npm test` = **20/20 pass** (18 overflow + 2 a11y); Lighthouse a11y stays 100 on `/` and `/contact`.

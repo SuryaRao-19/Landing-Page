@@ -43,3 +43,33 @@ Case studies (`md:3`), Testimonials (`md:2 / lg:3`), FAQ (single column, `max-w-
 
 Tap targets: footer social icons are 32×32px and legal links sit in a 24px+ row — both pass WCAG
 2.5.8 (AA, 24px). The primary nav collapses to a full-width drawer with 40px+ rows on mobile.
+
+---
+
+## Pass 2 — 2026-07-03 (re-audit of the current tree)
+
+The Pass-1 note above recorded "overflow = 0 px" for the then-current tree. Re-running the **same**
+CDP mobile-emulation sweep on the current tree (after the later content-update commits) surfaced
+**real horizontal overflow that had since regressed** — a good example of why the check is worth
+re-running. Method this pass: `page.setViewport({ deviceScaleFactor, isMobile })` (the reliable path;
+a manual `Emulation.setDeviceMetricsOverride` was silently ignored and fell back to an 800px default,
+so it was replaced), measuring `scrollWidth − clientWidth` and enumerating un-clipped offenders.
+
+### Overflow found and fixed
+| # | Page @375 | Overflow | Root cause | Fix |
+|---|-----------|:--------:|-----------|-----|
+| P2-R1 | Home (Testimonials) | **+47px** | Card grid `md:2/lg:3` with no base `grid-cols-1` → mobile `auto` track grew to the 402px card max-content | Added `grid-cols-1` |
+| P2-R2 | Home (AI Showcase) | **+10px** | Content column `x:30` entrance transform poked past the edge pre-scroll | `overflow-hidden` on section (+ base `grid-cols-1`) |
+| P2-R3 | About (Our Story) | **+4px** | Column `x:24` entrance transform | `overflow-hidden` on section (+ base `grid-cols-1`) |
+
+### Verification matrix (after fixes)
+Swept **9 pages** (`/`, `/contact`, `/services`, `/about`, `/case-studies`, `/industries`,
+`/technologies`, `/blog`, `/careers`) × **3 widths** (375 / 768 / 1024):
+
+> **ALL CLEAN — `scrollWidth === clientWidth` on every page at every width (0px horizontal overflow).**
+
+### Tap targets
+Primary controls (buttons, `ButtonLink`, nav rows, form inputs) meet **44×44px** (`py-2.5`–`py-3.5`
++ generous padding). Footer social icons (32×32) and legal links meet **WCAG 2.5.8 AA (24px)** with
+8px+ spacing — kept at their compact size to preserve footer density; enlarging to 44px is a design
+call flagged in `ui-polish-changes.md`, not a defect.

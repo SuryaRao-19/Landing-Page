@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'
+import { RefreshCw, Brain, Cloud, Bot, BarChart3, ShieldCheck } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Solutions — Digital Transformation & Enterprise Technology',
@@ -8,12 +9,12 @@ export const metadata: Metadata = {
 }
 
 const SOLUTIONS = [
-  { title: 'Digital Transformation',          icon: '🔄', desc: 'End-to-end programs that modernize legacy systems, digitize processes, and create new digital revenue streams.',                                                                        outcomes: ['Legacy system modernization','Process digitization','Digital product development','Change management'] },
-  { title: 'AI & Machine Learning Adoption',  icon: '🧠', desc: 'A structured approach to AI — from strategy and data readiness assessment to model deployment and organizational capability building.',                                               outcomes: ['AI readiness assessment','Data strategy & governance','ML model development','AI Center of Excellence'] },
-  { title: 'Cloud Migration & Modernization', icon: '☁️', desc: 'Risk-managed cloud migration programs that move your workloads to AWS, Azure, or GCP with zero business disruption.',                                                                   outcomes: ['Workload assessment','Migration strategy (7Rs)','Zero-downtime migration','Post-migration optimization'] },
-  { title: 'Enterprise Automation',           icon: '🤖', desc: 'Intelligence-led automation that combines RPA, AI, and process orchestration to transform how work gets done.',                                                                           outcomes: ['Process discovery & mining','Automation roadmap','RPA & AI implementation','Continuous optimization'] },
-  { title: 'Data & Analytics Platform',       icon: '📊', desc: 'Build the data foundations your AI and analytics initiatives need — from ingestion and transformation to warehousing and BI.',                                                             outcomes: ['Data strategy','Platform architecture','Pipeline development','BI & self-service analytics'] },
-  { title: 'Cybersecurity Transformation',    icon: '🔒', desc: 'A comprehensive cybersecurity program that assesses, improves, and continuously monitors your security posture.',                                                                          outcomes: ['Security assessment','Zero-trust implementation','SOC setup','Compliance certification'] },
+  { title: 'Digital Transformation',          icon: RefreshCw, desc: 'End-to-end programs that modernize legacy systems, digitize processes, and create new digital revenue streams.',                                                                        outcomes: ['Legacy system modernization','Process digitization','Digital product development','Change management'] },
+  { title: 'AI & Machine Learning Adoption',  icon: Brain, desc: 'A structured approach to AI — from strategy and data readiness assessment to model deployment and organizational capability building.',                                               outcomes: ['AI readiness assessment','Data strategy & governance','ML model development','AI Center of Excellence'] },
+  { title: 'Cloud Migration & Modernization', icon: Cloud, desc: 'Risk-managed cloud migration programs that move your workloads to AWS, Azure, or GCP with zero business disruption.',                                                                   outcomes: ['Workload assessment','Migration strategy (7Rs)','Zero-downtime migration','Post-migration optimization'] },
+  { title: 'Enterprise Automation',           icon: Bot, desc: 'Intelligence-led automation that combines RPA, AI, and process orchestration to transform how work gets done.',                                                                           outcomes: ['Process discovery & mining','Automation roadmap','RPA & AI implementation','Continuous optimization'] },
+  { title: 'Data & Analytics Platform',       icon: BarChart3, desc: 'Build the data foundations your AI and analytics initiatives need — from ingestion and transformation to warehousing and BI.',                                                             outcomes: ['Data strategy','Platform architecture','Pipeline development','BI & self-service analytics'] },
+  { title: 'Cybersecurity Transformation',    icon: ShieldCheck, desc: 'A comprehensive cybersecurity program that assesses, improves, and continuously monitors your security posture.',                                                                          outcomes: ['Security assessment','Zero-trust implementation','SOC setup','Compliance certification'] },
 ]
 
 export default function SolutionsPage() {
@@ -35,7 +36,7 @@ export default function SolutionsPage() {
                 key={sol.title}
                 className="bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] hover:border-[#CBD5E1] hover:-translate-y-1 transition-all duration-300 group"
               >
-                <div className="text-3xl mb-5">{sol.icon}</div>
+                <sol.icon size={28} className="text-[#2563EB] mb-5" aria-hidden />
                 <h2 className="font-bold text-[#0A0F1C] text-[.9375rem] mb-2 group-hover:text-[#2563EB] transition-colors">{sol.title}</h2>
                 <p className="text-sm text-[#64748B] leading-relaxed mb-4">{sol.desc}</p>
                 <ul className="space-y-1.5">

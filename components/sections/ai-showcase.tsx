@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowRight, Brain, Cpu, BarChart3, Layers, Zap, Shield } from 'lucide-react'
+import { ArrowRight, Brain, Cpu, BarChart3, Layers, Zap, Shield, Code2, Lock, Globe, Cloud, Bot, type LucideIcon } from 'lucide-react'
 import { ButtonLink } from '@/components/ui/button'
 import { SectionHeader } from '@/components/shared/section-header'
 
@@ -48,14 +48,23 @@ function AIIllustration() {
       <circle cx="230" cy="180" r="4" fill="white" opacity=".9"/>
 
       {/* Satellite nodes */}
-      {[
-        [230,50,'📊'],[360,130,'💻'],[360,230,'🔒'],[230,310,'🌐'],[100,230,'☁️'],[100,130,'🤖'],
-      ].map(([cx,cy,icon],i) => (
+      {([
+        { cx: 230, cy: 50,  Icon: BarChart3 },
+        { cx: 360, cy: 130, Icon: Code2 },
+        { cx: 360, cy: 230, Icon: Lock },
+        { cx: 230, cy: 310, Icon: Globe },
+        { cx: 100, cy: 230, Icon: Cloud },
+        { cx: 100, cy: 130, Icon: Bot },
+      ] as { cx: number; cy: number; Icon: LucideIcon }[]).map(({ cx, cy, Icon }, i) => (
         <g key={i}>
-          <line x1={230} y1={180} x2={cx as number} y2={cy as number}
+          <line x1={230} y1={180} x2={cx} y2={cy}
             stroke="rgba(37,99,235,.2)" strokeWidth="1.2" strokeDasharray="3 4"/>
-          <circle cx={cx as number} cy={cy as number} r="24" fill="rgba(10,15,28,.85)" stroke="rgba(37,99,235,.35)" strokeWidth="1.5"/>
-          <text x={cx as number} y={(cy as number)+5} textAnchor="middle" fontSize="14">{icon as string}</text>
+          <circle cx={cx} cy={cy} r="24" fill="rgba(10,15,28,.85)" stroke="rgba(37,99,235,.35)" strokeWidth="1.5"/>
+          <foreignObject x={cx - 11} y={cy - 11} width={22} height={22}>
+            <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon size={20} color="#93C5FD" strokeWidth={2} />
+            </div>
+          </foreignObject>
         </g>
       ))}
 
@@ -76,9 +85,9 @@ function AIIllustration() {
 
 export function AIShowcase() {
   return (
-    <section className="section bg-dark-mesh" id="ai">
+    <section className="section bg-dark-mesh overflow-hidden" id="ai">
       <div className="container">
-        <div className="grid lg:grid-cols-2 gap-12 xl:gap-20 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 xl:gap-20 items-center">
           {/* Left: illustration */}
           <motion.div
             initial={{ opacity: 0, scale: .95 }}
@@ -127,7 +136,7 @@ export function AIShowcase() {
               <ButtonLink href="/services/artificial-intelligence" variant="primary" size="md" iconRight={<ArrowRight size={14} />}>
                 Explore AI Services
               </ButtonLink>
-              <ButtonLink href="/contact" variant="outline" size="md" className="border-white/20 text-white hover:bg-white/10 hover:border-white/30">
+              <ButtonLink href="/contact" variant="outline" size="md" className="bg-transparent border-white/20 text-white hover:bg-white/10 hover:border-white/30">
                 Talk to an AI Expert
               </ButtonLink>
             </div>

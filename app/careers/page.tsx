@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { MapPin, Clock, Briefcase, ArrowRight } from 'lucide-react'
+import { MapPin, Clock, Briefcase, ArrowRight, Wallet, HeartPulse, BookOpen, Home, Globe, Zap } from 'lucide-react'
 import { JOB_OPENINGS } from '@/lib/data'
 import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'
@@ -11,12 +11,12 @@ export const metadata: Metadata = {
 }
 
 const BENEFITS = [
-  { icon: '💰', title: 'Competitive Compensation', desc: 'Top-of-market salaries, performance bonuses, and ESOPs for senior roles.' },
-  { icon: '🏥', title: 'Comprehensive Health Cover', desc: 'Full medical, dental, and vision for you and your family.' },
-  { icon: '📚', title: 'Learning & Development', desc: '₹1 lakh annual L&D budget per employee. Certifications fully sponsored.' },
-  { icon: '🏠', title: 'Flexible Work', desc: 'Hybrid work model with up to 3 days WFH for most roles.' },
-  { icon: '🌍', title: 'Global Exposure', desc: 'Opportunities to work with clients and teams across 25+ countries.' },
-  { icon: '⚡', title: 'Career Growth', desc: 'Clear growth paths, bi-annual reviews, and mentorship programs.' },
+  { icon: Wallet,    title: 'Competitive Compensation', desc: 'Top-of-market salaries, performance bonuses, and ESOPs for senior roles.' },
+  { icon: HeartPulse,title: 'Comprehensive Health Cover', desc: 'Full medical, dental, and vision for you and your family.' },
+  { icon: BookOpen,  title: 'Learning & Development', desc: '₹1 lakh annual L&D budget per employee. Certifications fully sponsored.' },
+  { icon: Home,      title: 'Flexible Work', desc: 'Hybrid work model with up to 3 days WFH for most roles.' },
+  { icon: Globe,     title: 'Global Exposure', desc: 'Opportunities to work with clients and teams across 25+ countries.' },
+  { icon: Zap,       title: 'Career Growth', desc: 'Clear growth paths, bi-annual reviews, and mentorship programs.' },
 ]
 
 export default function CareersPage() {
@@ -42,7 +42,7 @@ export default function CareersPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {BENEFITS.map((b) => (
               <div key={b.title} className="bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] hover:-translate-y-1 transition-all duration-300">
-                <div className="text-3xl mb-4">{b.icon}</div>
+                <b.icon size={28} className="text-[#2563EB] mb-4" aria-hidden />
                 <h3 className="font-bold text-[#0A0F1C] mb-2">{b.title}</h3>
                 <p className="text-sm text-[#64748B] leading-relaxed">{b.desc}</p>
               </div>

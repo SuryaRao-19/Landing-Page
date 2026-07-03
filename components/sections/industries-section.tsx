@@ -73,11 +73,11 @@ export function IndustriesSection() {
 
                   {/* Icon */}
                   <div
-                    className="text-3xl mb-3 inline-flex items-center justify-center w-12 h-12 rounded-[14px] transition-transform duration-300 group-hover:scale-110"
-                    style={colors ? { background: colors.badge } : { background: '#F1F5F9' }}
+                    className="mb-3 inline-flex items-center justify-center w-12 h-12 rounded-[14px] transition-transform duration-300 group-hover:scale-110"
+                    style={colors ? { background: colors.badge, color: industry.color } : { background: '#F1F5F9', color: industry.color }}
                     aria-hidden
                   >
-                    {industry.icon}
+                    <industry.icon size={22} />
                   </div>
 
                   <p className="font-semibold text-[0.9375rem] text-[#334155] group-hover:text-[#2563EB] transition-colors leading-snug">

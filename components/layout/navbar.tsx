@@ -152,6 +152,7 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openMenu,   setOpenMenu]   = useState<string | null>(null)
   const pathname = usePathname()
+  const [prevPath, setPrevPath] = useState(pathname)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -160,7 +161,26 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => { setMobileOpen(false); setOpenMenu(null) }, [pathname])
+  // Close any open menus when the route changes — done during render (React's
+  // recommended pattern) instead of in an effect, to avoid a cascading re-render.
+  if (pathname !== prevPath) {
+    setPrevPath(pathname)
+    setMobileOpen(false)
+    setOpenMenu(null)
+  }
+
+  // Mobile drawer: lock background scroll and close on Escape while open.
+  useEffect(() => {
+    if (!mobileOpen) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileOpen(false) }
+    document.addEventListener('keydown', onKey)
+    const prevOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = prevOverflow
+    }
+  }, [mobileOpen])
 
   const open  = useCallback((l: string) => { if (timerRef.current) clearTimeout(timerRef.current); setOpenMenu(l) }, [])
   const close = useCallback(() => { timerRef.current = setTimeout(() => setOpenMenu(null), 180) }, [])

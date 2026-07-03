@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight, TrendingUp } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { CASE_STUDIES } from '@/lib/data'
 import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'

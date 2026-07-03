@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { PageHero } from '@/components/shared/page-hero'
 import { CTASection } from '@/components/sections/cta-section'
+import { Brain, HeartPulse, Settings, ShoppingBag, Smartphone, Truck, Landmark, ShieldCheck, BarChart3 } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Portfolio — Our Work',
@@ -8,15 +9,15 @@ export const metadata: Metadata = {
 }
 
 const PORTFOLIO_ITEMS = [
-  { title: 'AI Fraud Detection Platform', type: 'Artificial Intelligence', industry: 'Banking', color: '#1B4FD8', icon: '🧠' },
-  { title: 'Hospital Management Suite', type: 'Software Development', industry: 'Healthcare', color: '#10B981', icon: '🏥' },
-  { title: 'Smart Factory IoT Dashboard', type: 'IoT & Analytics', industry: 'Manufacturing', color: '#7C3AED', icon: '⚙️' },
-  { title: 'E-Commerce Platform (8 Countries)', type: 'Web Development', industry: 'Retail', color: '#F97316', icon: '🛍️' },
-  { title: 'Digital Learning Platform', type: 'Mobile App', industry: 'Education', color: '#06B6D4', icon: '📱' },
-  { title: 'Real-Time Logistics Tracker', type: 'Cloud & DevOps', industry: 'Logistics', color: '#EAB308', icon: '🚛' },
-  { title: 'Citizen Services Portal', type: 'Web Development', industry: 'Government', color: '#0D9488', icon: '🏛️' },
-  { title: 'SOC-as-a-Service Platform', type: 'Cybersecurity', industry: 'Multi-sector', color: '#EF4444', icon: '🔒' },
-  { title: 'Predictive Maintenance AI', type: 'AI/ML', industry: 'Manufacturing', color: '#2563EB', icon: '📊' },
+  { title: 'AI Fraud Detection Platform', type: 'Artificial Intelligence', industry: 'Banking', color: '#1B4FD8', icon: Brain },
+  { title: 'Hospital Management Suite', type: 'Software Development', industry: 'Healthcare', color: '#10B981', icon: HeartPulse },
+  { title: 'Smart Factory IoT Dashboard', type: 'IoT & Analytics', industry: 'Manufacturing', color: '#7C3AED', icon: Settings },
+  { title: 'E-Commerce Platform (8 Countries)', type: 'Web Development', industry: 'Retail', color: '#F97316', icon: ShoppingBag },
+  { title: 'Digital Learning Platform', type: 'Mobile App', industry: 'Education', color: '#06B6D4', icon: Smartphone },
+  { title: 'Real-Time Logistics Tracker', type: 'Cloud & DevOps', industry: 'Logistics', color: '#EAB308', icon: Truck },
+  { title: 'Citizen Services Portal', type: 'Web Development', industry: 'Government', color: '#0D9488', icon: Landmark },
+  { title: 'SOC-as-a-Service Platform', type: 'Cybersecurity', industry: 'Multi-sector', color: '#EF4444', icon: ShieldCheck },
+  { title: 'Predictive Maintenance AI', type: 'AI/ML', industry: 'Manufacturing', color: '#2563EB', icon: BarChart3 },
 ]
 
 export default function PortfolioPage() {
@@ -39,10 +40,10 @@ export default function PortfolioPage() {
                 className="group bg-white border border-[#E2E8F0] rounded-[20px] overflow-hidden hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] transition-all duration-300"
               >
                 <div
-                  className="h-44 flex items-center justify-center text-5xl"
-                  style={{ background: `${item.color}12` }}
+                  className="h-44 flex items-center justify-center"
+                  style={{ background: `${item.color}12`, color: item.color }}
                 >
-                  {item.icon}
+                  <item.icon size={52} aria-hidden />
                 </div>
                 <div className="p-6">
                   <div className="flex items-center gap-2 mb-3">

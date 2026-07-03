@@ -31,7 +31,7 @@ export function TestimonialsSection() {
           className="mb-14"
         />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {TESTIMONIALS.map((t, i) => {
             const metric = METRICS[i]
             return (
@@ -55,7 +55,7 @@ export function TestimonialsSection() {
                     {metric && (
                       <div className="inline-flex flex-col items-end bg-[#EFF6FF] border border-[#BFDBFE] rounded-[10px] px-3 py-1.5">
                         <span className="text-[12px] font-extrabold text-[#2563EB] leading-tight">{metric.value}</span>
-                        <span className="text-[10px] text-[#93C5FD] leading-tight">{metric.label}</span>
+                        <span className="text-[10px] text-[#475569] leading-tight">{metric.label}</span>
                       </div>
                     )}
                   </div>

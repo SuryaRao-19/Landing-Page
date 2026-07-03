@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { CheckCircle2, ArrowRight } from 'lucide-react'
 import { SERVICES } from '@/lib/data'
 import { CTASection } from '@/components/sections/cta-section'
-import { PageHero } from '@/components/shared/page-hero'
 import { ButtonLink } from '@/components/ui/button'
 
 interface Props { params: Promise<{ slug: string }> }
@@ -54,11 +53,8 @@ export default async function ServiceDetailPage({ params }: Props) {
           <div className="grid lg:grid-cols-[1fr_1fr] gap-14 items-center">
             {/* Left */}
             <div>
-              <div
-                className="w-14 h-14 rounded-[18px] flex items-center justify-center text-2xl mb-6 shadow-sm"
-                style={{ background: `${svc.color}14`, border: `1px solid ${svc.color}22` }}
-              >
-                {svc.icon}
+              <div className="w-14 h-14 rounded-[18px] flex items-center justify-center mb-6 shadow-sm bg-[#EFF6FF] border border-[#BFDBFE] text-[#2563EB]">
+                <svc.icon size={26} aria-hidden />
               </div>
 
               <h1 className="display-lg text-[#0A0F1C] mb-5 font-extrabold">
@@ -85,7 +81,7 @@ export default async function ServiceDetailPage({ params }: Props) {
 
             {/* Right: Benefits */}
             <div className="grid grid-cols-2 gap-3">
-              {svc.benefits.map((b, i) => (
+              {svc.benefits.map((b) => (
                 <div
                   key={b}
                   className="bg-white border border-[#E2E8F0] rounded-[16px] p-4 flex items-start gap-3 shadow-[0_2px_8px_rgba(0,0,0,.05)] hover:shadow-[0_6px_20px_rgba(0,0,0,.07)] hover:-translate-y-0.5 transition-all duration-200"
@@ -141,7 +137,7 @@ export default async function ServiceDetailPage({ params }: Props) {
                 href={`/services/${r.slug}`}
                 className="group block bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:shadow-[0_12px_40px_rgba(0,0,0,.08)] hover:border-[#CBD5E1] hover:-translate-y-1 transition-all duration-300"
               >
-                <span className="text-2xl mb-4 block">{r.icon}</span>
+                <span className="mb-4 flex w-11 h-11 items-center justify-center rounded-[12px] bg-[#EFF6FF] border border-[#BFDBFE] text-[#2563EB]"><r.icon size={20} aria-hidden /></span>
                 <h3 className="font-bold text-[#0A0F1C] mb-2 text-[.9375rem] group-hover:text-[#2563EB] transition-colors">{r.title}</h3>
                 <p className="text-sm text-[#64748B] leading-relaxed line-clamp-2">{r.shortDesc}</p>
                 <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#2563EB] mt-4 opacity-0 group-hover:opacity-100 transition-opacity">

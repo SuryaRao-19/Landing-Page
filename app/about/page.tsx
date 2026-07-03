@@ -1,18 +1,17 @@
 'use client'
 
-import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { CheckCircle2, ArrowRight, Target, Telescope, Users, Globe } from 'lucide-react'
+import { Target, Telescope, Code2, Eye, Lightbulb, Handshake, Leaf } from 'lucide-react'
 import { CTASection } from '@/components/sections/cta-section'
 import { PageHero } from '@/components/shared/page-hero'
 
 const VALUES = [
-  { icon: '🎯', title: 'Client Success First',    desc: 'Every decision we make is guided by one question: does this create value for our clients?' },
-  { icon: '⚙️', title: 'Engineering Excellence',  desc: 'We hold ourselves to the highest standards of code quality, architecture, and delivery.' },
-  { icon: '🔍', title: 'Transparency',             desc: 'Honest communication, realistic commitments, and full visibility into every project.' },
-  { icon: '💡', title: 'Innovation',               desc: 'We continuously invest in emerging technologies so our clients always have access to the cutting edge.' },
-  { icon: '🤝', title: 'Inclusivity',              desc: 'A diverse team builds better solutions. We actively cultivate an inclusive, equitable workplace.' },
-  { icon: '🌱', title: 'Sustainability',            desc: "Technology should create a better world. We consider the environmental and social impact of everything we build." },
+  { icon: Target,    title: 'Client Success First',    desc: 'Every decision we make is guided by one question: does this create value for our clients?' },
+  { icon: Code2,     title: 'Engineering Excellence',  desc: 'We hold ourselves to the highest standards of code quality, architecture, and delivery.' },
+  { icon: Eye,       title: 'Transparency',             desc: 'Honest communication, realistic commitments, and full visibility into every project.' },
+  { icon: Lightbulb, title: 'Innovation',               desc: 'We continuously invest in emerging technologies so our clients always have access to the cutting edge.' },
+  { icon: Handshake, title: 'Inclusivity',              desc: 'A diverse team builds better solutions. We actively cultivate an inclusive, equitable workplace.' },
+  { icon: Leaf,      title: 'Sustainability',            desc: "Technology should create a better world. We consider the environmental and social impact of everything we build." },
 ]
 
 const MILESTONES = [
@@ -51,9 +50,9 @@ export default function AboutPage() {
       />
 
       {/* Our Story */}
-      <section className="section bg-white">
+      <section className="section bg-white overflow-hidden">
         <div className="container max-w-5xl">
-          <div className="grid md:grid-cols-2 gap-14 items-start">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-start">
             {/* Left */}
             <motion.div
               variants={stagger}
@@ -73,7 +72,7 @@ export default function AboutPage() {
               <div className="relative pl-8">
                 <div className="absolute left-2.5 top-0 bottom-0 w-px bg-gradient-to-b from-[#2563EB] to-transparent" aria-hidden />
                 <div className="space-y-6">
-                  {MILESTONES.map((m, i) => (
+                  {MILESTONES.map((m) => (
                     <motion.div
                       key={m.year}
                       variants={fadeUp}
@@ -133,18 +132,18 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-2 gap-5">
             {[
               {
-                icon: '🎯',
+                icon: Target,
                 bg: 'from-blue-500 to-cyan-500',
                 title: 'Our Mission',
                 text: 'To democratize enterprise-grade technology for Indian and global businesses, enabling every organization — regardless of size — to compete and thrive in the digital economy.',
               },
               {
-                icon: '🔭',
+                icon: Telescope,
                 bg: 'from-violet-500 to-blue-500',
                 title: 'Our Vision',
                 text: 'To be the most trusted technology partner for enterprises across Asia, the Middle East, and beyond — recognized for engineering excellence, client outcomes, and responsible innovation.',
               },
-            ].map(({ icon, bg, title, text }, i) => (
+            ].map(({ icon: Icon, bg, title, text }, i) => (
               <motion.div
                 key={title}
                 initial={{ opacity: 0, y: 20 }}
@@ -153,8 +152,8 @@ export default function AboutPage() {
                 transition={{ delay: i * .15, duration: .5 }}
                 className="bg-white border border-[#E2E8F0] rounded-[24px] p-8 hover:shadow-[0_8px_32px_rgba(0,0,0,.07)] transition-shadow"
               >
-                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${bg} flex items-center justify-center text-xl mb-6 shadow-sm`}>
-                  {icon}
+                <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${bg} flex items-center justify-center text-white mb-6 shadow-sm`}>
+                  <Icon size={22} aria-hidden />
                 </div>
                 <h2 className="font-bold text-[#0A0F1C] text-xl mb-4 tracking-tight">{title}</h2>
                 <p className="text-[#64748B] leading-[1.8]">{text}</p>
@@ -185,7 +184,9 @@ export default function AboutPage() {
                 variants={fadeUp}
                 className="group bg-[#F8FAFC] border border-[#E2E8F0] rounded-[20px] p-6 hover:bg-white hover:shadow-[0_8px_32px_rgba(0,0,0,.07)] hover:border-[#CBD5E1] hover:-translate-y-0.5 transition-all duration-300"
               >
-                <span className="text-2xl mb-4 block">{v.icon}</span>
+                <span className="w-11 h-11 mb-4 flex items-center justify-center rounded-[12px] bg-[#2563EB]/[.08] text-[#2563EB] group-hover:bg-[#2563EB] group-hover:text-white transition-colors" aria-hidden>
+                  <v.icon size={20} strokeWidth={2} />
+                </span>
                 <h3 className="font-bold text-[#0A0F1C] mb-2 text-[.9375rem]">{v.title}</h3>
                 <p className="text-sm text-[#64748B] leading-[1.75]">{v.desc}</p>
               </motion.div>

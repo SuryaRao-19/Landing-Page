@@ -21,18 +21,23 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <>
+      {/* Above/near the fold — rendered eagerly */}
       <HeroSection />
       <TrustBar />
-      <ServicesGrid />
-      <IndustriesSection />
-      <AIShowcase />
+
+      {/* Below the fold — content-visibility:auto defers their render work.
+          WhyUs is intentionally NOT wrapped: it contains a lg:sticky column and
+          the containment content-visibility introduces would break the sticky. */}
+      <div className="cv-auto"><ServicesGrid /></div>
+      <div className="cv-auto"><IndustriesSection /></div>
+      <div className="cv-auto"><AIShowcase /></div>
       <WhyUs />
-      <TechStack />
-      <CaseStudiesPreview />
-      <ProcessSection />
-      <TestimonialsSection />
-      <FAQSection />
-      <CTASection />
+      <div className="cv-auto"><TechStack /></div>
+      <div className="cv-auto"><CaseStudiesPreview /></div>
+      <div className="cv-auto"><ProcessSection /></div>
+      <div className="cv-auto"><TestimonialsSection /></div>
+      <div className="cv-auto"><FAQSection /></div>
+      <div className="cv-auto"><CTASection /></div>
     </>
   )
 }

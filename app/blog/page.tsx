@@ -1,9 +1,8 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { Clock, User, ArrowRight } from 'lucide-react'
+import { Clock } from 'lucide-react'
 import { BLOG_POSTS } from '@/lib/data'
 import { PageHero } from '@/components/shared/page-hero'
-import { formatDate } from '@/lib/utils'
 
 export const metadata: Metadata = {
   title: 'Blog — Technology Insights & Enterprise Perspectives',

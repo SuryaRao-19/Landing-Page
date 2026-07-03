@@ -27,11 +27,8 @@ export default function ServicesPage() {
             {SERVICES.map((svc) => (
               <Link key={svc.slug} href={`/services/${svc.slug}`} className="group block">
                 <article className="h-full bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] hover:border-[#CBD5E1] transition-all duration-300">
-                  <div
-                    className="w-12 h-12 rounded-[14px] flex items-center justify-center text-2xl mb-5 shadow-sm"
-                    style={{ background: `${svc.color}14`, border: `1px solid ${svc.color}22` }}
-                  >
-                    {svc.icon}
+                  <div className="w-12 h-12 rounded-[14px] flex items-center justify-center mb-5 shadow-sm bg-[#EFF6FF] border border-[#BFDBFE] text-[#2563EB]">
+                    <svc.icon size={22} aria-hidden />
                   </div>
                   <h2 className="font-bold text-[#0A0F1C] text-[.9375rem] mb-2 group-hover:text-[#2563EB] transition-colors leading-snug">
                     {svc.title}

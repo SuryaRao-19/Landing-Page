@@ -5,6 +5,34 @@ import { contactSchema } from '@/lib/contact-schema'
 // Resend API key is never exposed to the browser.
 export const runtime = 'nodejs'
 
+// ── Basic abuse protection ─────────────────────────────────────────────
+// In-memory sliding-window rate limit, keyed by client IP. NOTE: this is
+// best-effort only — serverless instances don't share memory and reset on cold
+// start, so it deters casual floods but is not a hard guarantee. For strong,
+// distributed limiting move this to Upstash Redis / Vercel KV.
+const RATE_LIMIT = 5 // max submissions…
+const WINDOW_MS = 10 * 60 * 1000 // …per 10 minutes per IP
+const hits = new Map<string, number[]>()
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < WINDOW_MS)
+  recent.push(now)
+  hits.set(ip, recent)
+  // Opportunistic prune so the map can't grow unbounded.
+  if (hits.size > 5000) {
+    for (const [key, times] of hits) {
+      if (times.every((t) => now - t >= WINDOW_MS)) hits.delete(key)
+    }
+  }
+  return recent.length > RATE_LIMIT
+}
+
+function clientIp(request: Request): string {
+  const fwd = request.headers.get('x-forwarded-for')
+  return fwd?.split(',')[0]?.trim() || request.headers.get('x-real-ip') || 'unknown'
+}
+
 function escapeHtml(value: string) {
   return value
     .replace(/&/g, '&amp;')
@@ -15,11 +43,26 @@ function escapeHtml(value: string) {
 }
 
 export async function POST(request: Request) {
+  if (isRateLimited(clientIp(request))) {
+    return NextResponse.json(
+      { error: 'Too many requests. Please try again in a few minutes.' },
+      { status: 429 },
+    )
+  }
+
   let raw: unknown
   try {
     raw = await request.json()
   } catch {
     return NextResponse.json({ error: 'Invalid request body.' }, { status: 400 })
+  }
+
+  // Honeypot: `website` is a hidden field that real users never see or fill.
+  // If it has a value, the sender is almost certainly a bot — accept silently
+  // (return success without sending) so the bot gets no signal.
+  const honeypot = (raw as { website?: unknown })?.website
+  if (typeof honeypot === 'string' && honeypot.trim() !== '') {
+    return NextResponse.json({ ok: true })
   }
 
   const parsed = contactSchema.safeParse(raw)

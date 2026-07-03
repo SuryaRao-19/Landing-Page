@@ -1,3 +1,5 @@
+import type { LucideIcon } from 'lucide-react'
+
 export interface NavItem {
   label: string
   href: string
@@ -9,7 +11,7 @@ export interface Service {
   title: string
   shortDesc: string
   description: string
-  icon: string
+  icon: LucideIcon
   color: string
   features: string[]
   benefits: string[]
@@ -18,7 +20,7 @@ export interface Service {
 export interface Industry {
   slug: string
   title: string
-  icon: string
+  icon: LucideIcon
   description: string
   color: string
 }

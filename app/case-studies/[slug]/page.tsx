@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { ArrowLeft, CheckCircle2, TrendingUp, ArrowRight } from 'lucide-react'
+import { CheckCircle2, TrendingUp, ArrowRight } from 'lucide-react'
 import { CASE_STUDIES } from '@/lib/data'
 import { CTASection } from '@/components/sections/cta-section'
 import { ButtonLink } from '@/components/ui/button'
