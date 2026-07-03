@@ -25,6 +25,7 @@ Accessibility = 100 after).
 | P6 | Hero graphic (`hero.tsx`) | `✓` and `↑` SVG-text glyphs → drawn `<path>` checkmark / up-arrow | Removes the last text-glyph dependency in the hero mock; pixel-consistent across platforms. |
 | P7 | About “Our Values” (`about/page.tsx`) | Emoji card icons (🎯⚙️🔍💡🤝🌱) → lucide (Target/Code2/Eye/Lightbulb/Handshake/Leaf) in branded `#2563EB` tiles with a hover fill | Brings the last functional emoji icons in line with the site-wide lucide treatment. |
 | P8 | AI Showcase CTA (`ai-showcase.tsx`) | “Talk to an AI Expert” button was `outline` variant (`bg-white`) + `text-white` = **white-on-white, invisible label**; added `bg-transparent` | Correctness + contrast: the secondary CTA on the dark section is now a legible ghost button. Caught via visual verification. |
+| P9 | Services/Industries icons (`types`, `lib/data.ts`, `services-grid`, `industries-section`, `/services`, `/services/[slug]`, `/industries`) | `Service.icon`/`Industry.icon` retyped `string → LucideIcon`; emoji → lucide components in brand colors; Services grid’s redundant local icon map dropped | Removes the last emoji from the homepage (Industries section) and the /services + /industries pages; single source of truth for icons in the data layer. |
 
 ### Changes already in the working tree from the prior session (kept, not reverted)
 These were staged before this pass and are genuine polish/hardening — verified and retained:
@@ -59,10 +60,22 @@ needed **no change**:
 
 ## Previously-flagged items — now COMPLETED (you approved “a”)
 
-1. **All emoji replaced with lucide vectors.** AI-illustration nodes (P5), hero `✓`/`↑` (P6), and the
-   About “Our Values” cards (P7). **No color emoji remain anywhere on the site.** Verified visually at
-   1280px: the AI illustration shows clean monochrome node icons, and the values cards use branded
-   icon tiles.
+1. **Emoji replaced with lucide vectors across the primary surfaces.** AI-illustration nodes (P5),
+   hero `✓`/`↑` (P6), About “Our Values” (P7), and — after I caught that the Services/Industries icons
+   live in `lib/data.ts` (not component files) and my first grep missed them — the **homepage
+   Industries section** plus the **`/services` and `/industries` pages** (P9: `Service.icon`/
+   `Industry.icon` retyped to `LucideIcon`, mapped to Landmark/HeartPulse/Factory/… in brand colors;
+   the Services grid already used lucide). **Correction:** an earlier draft of this doc said “no color
+   emoji remain anywhere” — that was wrong. The **homepage is now emoji-free**, but emoji still remain
+   on **secondary pages**: `technologies` (tech-stack logos), `portfolio`, `solutions`, `careers`,
+   `careers/internship`, and the About **mission/vision** block. See “Still remaining” below.
+
+## Still remaining (emoji on secondary pages)
+Not yet converted — flagged, not silently claimed done:
+- **`app/technologies/page.tsx`** — ~30 tech icons (⚛️🐍☕…) are brand logos; lucide has no brand
+  marks, so these need a real logo set (e.g. Simple Icons), not generic icons. Recommend that route.
+- **`portfolio`, `solutions`, `careers`, `careers/internship`, About mission/vision** — category icons
+  in local arrays; straightforward lucide swaps (like P7). Happy to do these on your OK.
 2. **Footer social links repointed** to brand-consistent handles: LinkedIn
    `https://www.linkedin.com/company/nexgen-technologies`, X `https://x.com/NexGenTechIN` (matches the
    `@NexGenTechIN` metadata), GitHub `https://github.com/nexgen-technologies`; the “Twitter” label is

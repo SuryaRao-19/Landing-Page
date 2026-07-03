@@ -15,7 +15,7 @@ the final polished tree.
 
 | Category | Before | After | Δ |
 |----------|:------:|:-----:|:---:|
-| Performance | 74 | **83** | ▲ +9 |
+| Performance | 74 | **89** | ▲ +15 |
 | Accessibility | 91 | **100** | ▲ +9 |
 | Best Practices | 100 | **100** | — |
 | SEO | 100 | **100** | — |
@@ -24,23 +24,25 @@ Reports: `before-lighthouse.report.{json,html}` / `before-lighthouse.json` (orig
 `after-lighthouse.report.{json,html}` / `after-lighthouse.json` (final). Both captured on local prod
 builds under mobile emulation for a like-for-like comparison.
 
-> Performance note: this metric has real run-to-run variance on the animated hero. Across repeated
-> clean-server runs it sits at **82–83** (favorable single runs touched 88); **83** is the saved,
-> reproducible median reported here. Accessibility/Best-Practices/SEO are stable at 100.
+> Performance history: after the initial hardening this sat at a noisy **82–83** (the animated hero
+> made it vary run-to-run). The **LCP pass** — `content-visibility:auto` on below-the-fold sections —
+> cut main-thread work ~38% and **stabilized it at a reproducible 89** (three consecutive runs).
+> Accessibility/Best-Practices/SEO stable at 100.
 
 ### Key metric movements (mobile) — from the saved `after-lighthouse.report.json`
 | Metric | Before | After |
 |--------|:------:|:-----:|
 | First Contentful Paint | 3.1 s | **1.4 s** |
-| Speed Index | 4.7 s | **3.1 s** |
-| Total Blocking Time | 130 ms | **80 ms** |
-| Largest Contentful Paint | 4.7 s | **4.5 s** |
+| Speed Index | 4.7 s | **1.7 s** |
+| Total Blocking Time | 130 ms | **20 ms** |
+| Largest Contentful Paint | 4.7 s | **3.8 s** |
+| Main-thread work | 6.6 s | **4.0 s** |
 | Cumulative Layout Shift | 0 | **0** |
 
-Biggest wins: migrating render-blocking Google Fonts → `next/font` (self-hosted, zero layout shift)
-and the slide-only hero entrance drove **FCP 3.1→1.4s, Speed Index 4.7→3.1s, TBT 130→80ms**.
-**LCP (~4.5s) remains the main remaining lever** — it’s the animated hero illustration — and is the
-best target for a future performance pass (e.g. simplifying/deferring the hero SVG animation).
+Biggest wins: (1) `next/font` self-hosting + the slide-only hero entrance drove **FCP 3.1→1.4s**;
+(2) `content-visibility:auto` on below-fold sections cut **main-thread work 6.6→4.0s**, pulling
+**Speed Index 4.7→1.7s** and **TBT 130→20ms**. **LCP (~3.8s) remains the main lever** — the animated
+hero — and is the best target for a further pass (simplify/defer the hero SVG, or trim first-load JS).
 
 ### Accessibility: 91 → 100
 Before, Lighthouse flagged **color-contrast** (8 nodes) and **target-size** (2 nodes).
@@ -78,10 +80,13 @@ The site already carried extensive polish (design system in `globals.css`, lucid
 files, shared `Button` system). This pass added the mobile-overflow fixes above, **Escape-to-close +
 background scroll-lock** on the mobile drawer, and cleaned **18 dead imports/vars**. On approval the
 flagged items were then completed:
-- **Replaced all remaining emoji** with lucide vectors — the AI-illustration satellite nodes
-  (📊💻🔒🌐☁️🤖 → BarChart3/Code2/Lock/Globe/Cloud/Bot via `foreignObject`), the hero `✓`/`↑` glyphs
-  (→ SVG paths), and the About “Our Values” cards (🎯⚙️🔍💡🤝🌱 → Target/Code2/Eye/Lightbulb/
-  Handshake/Leaf in branded tiles). No color emoji remain on the site.
+- **Replaced emoji with lucide vectors** — AI-illustration nodes (📊💻🔒🌐☁️🤖 via `foreignObject`),
+  hero `✓`/`↑` glyphs (→ SVG paths), About “Our Values”, and — after catching that the
+  Services/Industries icons live in `lib/data.ts` (retyped `string → LucideIcon`) — the homepage
+  **Industries** section and the `/services` + `/industries` pages. **The homepage is now emoji-free.**
+  Emoji still remain on secondary pages (`technologies` tech-logos, `portfolio`, `solutions`,
+  `careers`, About mission/vision) — see `ui-polish-changes.md` “Still remaining”. (An earlier draft
+  claimed “no emoji anywhere”; that was inaccurate and is corrected here.)
 - **Footer socials** repointed to brand-consistent handles (LinkedIn `/company/nexgen-technologies`,
   X `x.com/NexGenTechIN` — matching the `@NexGenTechIN` metadata — GitHub `/nexgen-technologies`);
   the “Twitter” label corrected to “X”.
@@ -117,7 +122,8 @@ fix(a11y):       navbar route-change state reset moved out of effect — lint 0 
 fix(responsive): eliminate horizontal overflow at 375px (testimonials +47, AI +10, about +4 → 0)
 feat(nav):       mobile drawer closes on Escape + locks background scroll
 chore(cleanup):  remove 18 unused imports/vars; strip corrupted lines from bugs-found.md
-fix(icons):      replace all remaining emoji with lucide vectors (AI illustration, hero, About values)
+perf(lcp):       content-visibility on below-fold sections -> main-thread 6.6s->4.0s, perf 83->89
+fix(icons):      emoji -> lucide across homepage (AI illustration, hero, About, Industries) + /services + /industries (secondary pages still pending)
 fix(a11y):       fix white-on-white "Talk to an AI Expert" outline button (bg-transparent)
 chore(footer):   repoint social links to brand handles; "Twitter" label → "X"
 perf(hero):      slide-only hero entrance + self-hosted next/font → FCP 3.1→1.4s, SI 4.7→3.1s, TBT 130→80ms
