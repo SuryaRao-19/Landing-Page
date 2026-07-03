@@ -4,7 +4,7 @@ Marketing site for NexGen Technologies (fictional enterprise IT company), built 
 accessible, performance-tuned Next.js app.
 
 **Stack:** Next.js 16 (App Router) · React 19 · Tailwind CSS v4 · TypeScript · framer-motion ·
-lucide-react · react-hook-form + zod · Resend (contact email).
+lucide-react · react-hook-form + zod · Web3Forms (contact email).
 
 ## Getting started
 
@@ -24,17 +24,17 @@ npm test             # node:test suite (overflow + axe a11y) — needs a running
 
 ## Environment variables
 
-The contact form (`/api/contact`) sends email via [Resend](https://resend.com). Copy
-`.env.example` → `.env.local` and set:
+The contact form (`/api/contact`) sends email via [Web3Forms](https://web3forms.com) (free tier —
+no domain or credit card). Copy `.env.example` → `.env.local` and set:
 
-| Variable             | Purpose                                                         |
-| -------------------- | -------------------------------------------------------------- |
-| `RESEND_API_KEY`     | Resend API key (https://resend.com/api-keys)                   |
-| `CONTACT_TO_EMAIL`   | Inbox that receives submissions                                |
-| `CONTACT_FROM_EMAIL` | Verified Resend sender (use `onboarding@resend.dev` for tests) |
+| Variable               | Purpose                                                                              |
+| ---------------------- | ------------------------------------------------------------------------------------ |
+| `WEB3FORMS_ACCESS_KEY` | Free access key from https://web3forms.com — submissions go to the email tied to it |
 
-Set the same three in **Vercel → Project → Settings → Environment Variables** for production.
-Without them the form validates and rate-limits, then returns a clear "not configured" error.
+Set the same var in **Vercel → Project → Settings → Environment Variables** for production, then
+redeploy. Without it the form validates and rate-limits, then returns a clear "not configured"
+error. The route keeps a honeypot + in-memory IP rate limit server-side; the key is never exposed
+to the browser.
 
 ## Project structure
 
@@ -58,5 +58,5 @@ audit/          Lighthouse reports + before/after summary, bug sweep, polish not
 
 ## Deployment
 
-Deploys to **Vercel** (App Router, zero config). Ensure the Resend env vars are set for the contact
+Deploys to **Vercel** (App Router, zero config). Ensure `WEB3FORMS_ACCESS_KEY` is set for the contact
 form to send.
