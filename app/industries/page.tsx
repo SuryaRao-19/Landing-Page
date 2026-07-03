@@ -28,10 +28,10 @@ export default function IndustriesPage() {
                 className="bg-white border border-[#E2E8F0] rounded-[20px] p-6 hover:-translate-y-1 hover:shadow-[0_12px_40px_rgba(0,0,0,.09)] hover:border-[#CBD5E1] transition-all duration-300 group"
               >
                 <div
-                  className="w-14 h-14 rounded-2xl flex items-center justify-center text-3xl mb-5 group-hover:scale-110 transition-transform duration-300"
-                  style={{ background: `${ind.color}15` }}
+                  className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300"
+                  style={{ background: `${ind.color}15`, color: ind.color }}
                 >
-                  {ind.icon}
+                  <ind.icon size={26} aria-hidden />
                 </div>
                 <h2 className="font-bold text-[#0A0F1C] text-[.9375rem] mb-2 group-hover:text-[#2563EB] transition-colors">
                   {ind.title}

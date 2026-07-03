@@ -1,26 +1,10 @@
 'use client'
 
-import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight, Brain, Cloud, Code2, Globe, Smartphone, Shield, Settings, Repeat2, Database, Zap, Cpu, Lightbulb } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { SERVICES } from '@/lib/data'
 import { SectionHeader } from '@/components/shared/section-header'
-
-const SERVICE_ICONS: Record<string, React.ReactNode> = {
-  'artificial-intelligence': <Brain size={24} />,
-  'cloud-solutions':         <Cloud size={24} />,
-  'software-development':    <Code2 size={24} />,
-  'web-development':         <Globe size={24} />,
-  'mobile-apps':             <Smartphone size={24} />,
-  'cybersecurity':           <Shield size={24} />,
-  'enterprise-erp':          <Settings size={24} />,
-  'devops':                  <Repeat2 size={24} />,
-  'data-engineering':        <Database size={24} />,
-  'ui-ux-design':            <Zap size={24} />,
-  'business-automation':     <Cpu size={24} />,
-  'it-consulting':           <Lightbulb size={24} />,
-}
 
 const COLOR_MAP: Record<string, { bg: string; text: string; border: string; glow: string; gradFrom: string; gradTo: string }> = {
   blue:   { bg: '#EFF6FF', text: '#2563EB', border: '#BFDBFE', glow: 'rgba(37,99,235,.13)',   gradFrom: '#2563EB', gradTo: '#60A5FA' },
@@ -63,7 +47,7 @@ export function ServicesGrid() {
         {/* Grid — 3 cols on lg, 2 on md, 1 on sm */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {SERVICES.map((svc, i) => {
-            const icon  = SERVICE_ICONS[svc.slug]
+            const Icon  = svc.icon
             const color = COLOR_MAP[svc.color] ?? COLOR_MAP.blue
             return (
               <motion.div
@@ -105,7 +89,7 @@ export function ServicesGrid() {
                       className="rounded-[16px] flex items-center justify-center transition-all duration-300 group-hover:scale-110 shrink-0"
                       style={{ width: '56px', height: '56px', background: color.bg, color: color.text, border: `1.5px solid ${color.border}`, marginBottom: '24px' }}
                     >
-                      {icon ?? <span className="text-xl" aria-hidden>✦</span>}
+                      <Icon size={24} aria-hidden />
                     </div>
 
                     {/* Title */}
