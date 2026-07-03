@@ -55,7 +55,7 @@ export function TestimonialsSection() {
                     {metric && (
                       <div className="inline-flex flex-col items-end bg-[#EFF6FF] border border-[#BFDBFE] rounded-[10px] px-3 py-1.5">
                         <span className="text-[12px] font-extrabold text-[#2563EB] leading-tight">{metric.value}</span>
-                        <span className="text-[10px] text-[#93C5FD] leading-tight">{metric.label}</span>
+                        <span className="text-[10px] text-[#475569] leading-tight">{metric.label}</span>
                       </div>
                     )}
                   </div>

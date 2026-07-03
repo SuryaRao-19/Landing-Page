@@ -143,7 +143,7 @@ export function WhyUs() {
                   <p className="font-extrabold text-[1.875rem] leading-none tracking-[-0.04em] mb-1.5" style={{ color }}>
                     {value}
                   </p>
-                  <p className="text-[0.75rem] font-medium leading-snug" style={{ color, opacity: 0.65 }}>{label}</p>
+                  <p className="text-[0.75rem] font-medium leading-snug text-[#475569]">{label}</p>
                 </motion.div>
               ))}
             </div>

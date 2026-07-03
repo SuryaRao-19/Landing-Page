@@ -57,7 +57,7 @@ export default function ContactPage() {
                     <h2 className="font-extrabold text-[#0A0F1C] text-xl tracking-tight">Send Us a Message</h2>
                     <p className="text-sm text-[#64748B] mt-1">All enquiries treated with strict confidentiality.</p>
                   </div>
-                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-full shrink-0">
+                  <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-full shrink-0">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                     Team online now
                   </div>
@@ -99,7 +99,7 @@ export default function ContactPage() {
                   >
                     <q.icon size={18} style={{ color: q.color }} />
                     <p className="font-bold text-sm text-[#0A0F1C]">{q.label}</p>
-                    <p className="text-[11px] text-[#64748B]">{q.sub}</p>
+                    <p className="text-[11px] text-[#475569]">{q.sub}</p>
                   </a>
                 ))}
               </div>

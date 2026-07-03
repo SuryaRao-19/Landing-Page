@@ -14,8 +14,8 @@ const STATS = [
   { value: 500,  suffix: '+',   label: 'Enterprise Clients',  color: '#2563EB' },
   { value: 15,   suffix: '+',   label: 'Years of Excellence', color: '#0D9488' },
   { value: 1000, suffix: '+',   label: 'Projects Delivered',  color: '#7C3AED' },
-  { value: 25,   suffix: '+',   label: 'Countries Served',    color: '#06B6D4' },
-  { value: 99.9, suffix: '%',   label: 'Service Availability',color: '#F59E0B' },
+  { value: 25,   suffix: '+',   label: 'Countries Served',    color: '#0E7490' },
+  { value: 99.9, suffix: '%',   label: 'Service Availability',color: '#B45309' },
 ]
 
 const ease = [0.22, 1, 0.36, 1] as const
