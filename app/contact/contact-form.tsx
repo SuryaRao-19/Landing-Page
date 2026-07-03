@@ -125,13 +125,16 @@ export function ContactForm() {
     resolver: zodResolver(schema),
   })
 
-  async function onSubmit(data: FormData) {
+  async function onSubmit(data: FormData, event?: React.BaseSyntheticEvent) {
     setServerError(null)
+    // Read the honeypot from the submitted form (bots fill it; humans can't see it).
+    const form = event?.target as HTMLFormElement | undefined
+    const website = (form?.elements.namedItem('website') as HTMLInputElement | null)?.value ?? ''
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ ...data, website }),
       })
       if (!res.ok) {
         const body = await res.json().catch(() => null)
@@ -149,6 +152,12 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="space-y-4">
+      {/* Honeypot — hidden from users & assistive tech; only bots fill it. */}
+      <div aria-hidden="true" style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', clip: 'rect(0 0 0 0)', whiteSpace: 'nowrap' }}>
+        <label htmlFor="website">Leave this field empty</label>
+        <input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+      </div>
+
       <div className="grid sm:grid-cols-2 gap-4">
         <Field label="Full Name *" placeholder="Rajesh Kumar" autoComplete="name" {...register('name')} error={errors.name?.message} />
         <Field label="Work Email *" type="email" placeholder="rajesh@company.com" autoComplete="email" {...register('email')} error={errors.email?.message} />
