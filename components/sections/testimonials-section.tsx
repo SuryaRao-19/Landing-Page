@@ -31,7 +31,7 @@ export function TestimonialsSection() {
           className="mb-14"
         />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {TESTIMONIALS.map((t, i) => {
             const metric = METRICS[i]
             return (

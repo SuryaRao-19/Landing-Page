@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { ContactForm } from './contact-form'
-import { Mail, Phone, MapPin, MessageCircle, Clock, CheckCircle2 } from 'lucide-react'
+import { Mail, Phone, MapPin, MessageCircle, Clock } from 'lucide-react'
 import { PageHero } from '@/components/shared/page-hero'
 import { FAQSection } from '@/components/sections/faq-section'
 
@@ -55,7 +55,7 @@ export default function ContactPage() {
                 <div className="flex items-start justify-between mb-8">
                   <div>
                     <h2 className="font-extrabold text-[#0A0F1C] text-xl tracking-tight">Send Us a Message</h2>
-                    <p className="text-sm text-[#94A3B8] mt-1">All enquiries treated with strict confidentiality.</p>
+                    <p className="text-sm text-[#64748B] mt-1">All enquiries treated with strict confidentiality.</p>
                   </div>
                   <div className="flex items-center gap-1.5 text-[11px] font-semibold text-emerald-600 bg-emerald-50 border border-emerald-100 px-3 py-1.5 rounded-full shrink-0">
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -99,7 +99,7 @@ export default function ContactPage() {
                   >
                     <q.icon size={18} style={{ color: q.color }} />
                     <p className="font-bold text-sm text-[#0A0F1C]">{q.label}</p>
-                    <p className="text-[11px] text-[#94A3B8]">{q.sub}</p>
+                    <p className="text-[11px] text-[#64748B]">{q.sub}</p>
                   </a>
                 ))}
               </div>
@@ -113,7 +113,7 @@ export default function ContactPage() {
                       <MapPin size={13} className="text-[#2563EB] mt-0.5 shrink-0" />
                       <div>
                         <p className="font-semibold text-[#0A0F1C] text-xs">{office.city}</p>
-                        <p className="text-[11px] text-[#94A3B8] mt-0.5 leading-relaxed">{office.address}</p>
+                        <p className="text-[11px] text-[#64748B] mt-0.5 leading-relaxed">{office.address}</p>
                         <a
                           href={`tel:${office.phone.replace(/\s/g,'')}`}
                           className="text-[11px] text-[#2563EB] hover:text-[#1D4ED8] mt-1 block font-medium"

@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { CheckCircle2, ArrowRight } from 'lucide-react'
 import { SERVICES } from '@/lib/data'
 import { CTASection } from '@/components/sections/cta-section'
-import { PageHero } from '@/components/shared/page-hero'
 import { ButtonLink } from '@/components/ui/button'
 
 interface Props { params: Promise<{ slug: string }> }
@@ -85,7 +84,7 @@ export default async function ServiceDetailPage({ params }: Props) {
 
             {/* Right: Benefits */}
             <div className="grid grid-cols-2 gap-3">
-              {svc.benefits.map((b, i) => (
+              {svc.benefits.map((b) => (
                 <div
                   key={b}
                   className="bg-white border border-[#E2E8F0] rounded-[16px] p-4 flex items-start gap-3 shadow-[0_2px_8px_rgba(0,0,0,.05)] hover:shadow-[0_6px_20px_rgba(0,0,0,.07)] hover:-translate-y-0.5 transition-all duration-200"

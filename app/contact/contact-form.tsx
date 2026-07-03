@@ -21,13 +21,19 @@ const BUDGETS = ['Under ₹10 Lakhs','₹10–50 Lakhs','₹50 Lakhs–1 Crore',
 
 /* ── Premium field ───────────────────────────── */
 function Field({
-  label, error, className, ...props
+  label, error, className, id, name, ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & { label: string; error?: string }) {
+  const fieldId = id ?? name
+  const errorId = fieldId ? `${fieldId}-error` : undefined
   return (
     <div className={cn('group', className)}>
-      <label className="block text-[.8125rem] font-semibold text-[#475569] mb-2">{label}</label>
+      <label htmlFor={fieldId} className="block text-[.8125rem] font-semibold text-[#475569] mb-2">{label}</label>
       <div className="relative">
         <input
+          id={fieldId}
+          name={name}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? errorId : undefined}
           className={cn(
             'input-base text-[.875rem]',
             error && 'input-error',
@@ -38,6 +44,7 @@ function Field({
       <AnimatePresence>
         {error && (
           <motion.p
+            id={errorId}
             initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
             className="flex items-center gap-1.5 mt-1.5 text-[11.5px] text-red-500 font-medium"
           >
@@ -50,12 +57,18 @@ function Field({
 }
 
 function SelectField({
-  label, error, children, className, ...props
+  label, error, children, className, id, name, ...props
 }: React.SelectHTMLAttributes<HTMLSelectElement> & { label: string; error?: string }) {
+  const fieldId = id ?? name
+  const errorId = fieldId ? `${fieldId}-error` : undefined
   return (
     <div className={className}>
-      <label className="block text-[.8125rem] font-semibold text-[#475569] mb-2">{label}</label>
+      <label htmlFor={fieldId} className="block text-[.8125rem] font-semibold text-[#475569] mb-2">{label}</label>
       <select
+        id={fieldId}
+        name={name}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? errorId : undefined}
         className={cn(
           'input-base text-[.875rem] cursor-pointer appearance-none',
           'bg-[image:url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 12 12\'%3E%3Cpath fill=\'%2394A3B8\' d=\'M6 8L1 3h10z\'/%3E%3C/svg%3E")]',
@@ -69,6 +82,7 @@ function SelectField({
       <AnimatePresence>
         {error && (
           <motion.p
+            id={errorId}
             initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
             className="flex items-center gap-1.5 mt-1.5 text-[11.5px] text-red-500 font-medium"
           >
@@ -95,7 +109,7 @@ function SuccessState() {
       <p className="text-[#64748B] text-sm leading-relaxed max-w-xs mx-auto">
         Thank you for reaching out. A senior consultant will contact you within <strong className="text-[#0A0F1C]">2 business hours.</strong>
       </p>
-      <div className="mt-6 inline-flex items-center gap-2 text-xs text-[#94A3B8]">
+      <div className="mt-6 inline-flex items-center gap-2 text-xs text-[#64748B]">
         <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
         Our team has been notified
       </div>
@@ -157,16 +171,20 @@ export function ContactForm() {
       </div>
 
       <div>
-        <label className="block text-[.8125rem] font-semibold text-[#475569] mb-2">Message *</label>
+        <label htmlFor="message" className="block text-[.8125rem] font-semibold text-[#475569] mb-2">Message *</label>
         <textarea
+          id="message"
           rows={5}
           placeholder="Briefly describe your project, challenge, or goals…"
+          aria-invalid={errors.message ? true : undefined}
+          aria-describedby={errors.message ? 'message-error' : undefined}
           className={cn('input-base text-[.875rem] resize-none', errors.message && 'input-error')}
           {...register('message')}
         />
         <AnimatePresence>
           {errors.message && (
             <motion.p
+              id="message-error"
               initial={{ opacity: 0, y: -4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
               className="flex items-center gap-1.5 mt-1.5 text-[11.5px] text-red-500 font-medium"
             >
@@ -176,9 +194,9 @@ export function ContactForm() {
         </AnimatePresence>
       </div>
 
-      <p className="text-[11.5px] text-[#94A3B8] leading-relaxed">
+      <p className="text-[11.5px] text-[#64748B] leading-relaxed">
         By submitting you agree to our{' '}
-        <a href="/privacy-policy" className="text-[#2563EB] hover:underline">Privacy Policy</a>.
+        <a href="/privacy-policy" className="text-[#1D4ED8] underline underline-offset-2">Privacy Policy</a>.
         {' '}We never share your data with third parties.
       </p>
 

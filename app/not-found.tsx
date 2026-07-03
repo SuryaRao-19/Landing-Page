@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { Home, ArrowRight, Search } from 'lucide-react'
+import { Home, ArrowRight } from 'lucide-react'
 import { ButtonLink } from '@/components/ui/button'
 
 const QUICK_LINKS = [
