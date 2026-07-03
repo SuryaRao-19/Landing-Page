@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test \"tests/*.test.mjs\""
+    "test": "node --test tests/overflow.test.mjs tests/a11y.test.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
