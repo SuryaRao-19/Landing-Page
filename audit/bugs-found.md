@@ -167,3 +167,34 @@ Pass-1 **M1** (OG image), remainder of **M2** (drawer focus-trap/restore), **M3*
 (placeholder client names). New content/brand items flagged in `ui-polish-changes.md`: decorative
 SVG/About emoji, footer social handles. Reason for all: content/brand decisions or cosmetic-only, no
 correctness or accessibility impact, and outside a focused polish/hardening diff.
+
+---
+
+# Pass 3 — automated tests + CI (2026-07-03)
+
+Added a regression test suite (`tests/`, run with `npm test`) using the already-present
+`puppeteer-core` + system Chrome + Node's built-in `node:test` runner, plus `axe-core` for a11y:
+- **`overflow.test.mjs`** — asserts 0 horizontal overflow on 6 pages × {375, 768, 1024}px (codifies
+  the mobile bug this project kept regressing).
+- **`a11y.test.mjs`** — runs axe-core on `/` and `/contact` (the form page), failing on any
+  serious/critical violation. It **settles framer-motion `whileInView` animations first** (they're
+  JS-driven, so a `prefers-reduced-motion` CSS query does not stop them) to avoid axe reading text
+  mid-fade and reporting false contrast failures.
+
+CI: **`.github/workflows/ci.yml`** runs lint → build → the tests → **Lighthouse CI** (`lighthouserc.json`,
+budgets: performance ≥ 0.80, accessibility/best-practices/SEO = 1.0) on every push to `main` and PR.
+(Perf floor is 0.80 because `/contact` measures ~84 vs the homepage ~88; a11y/BP/SEO are strict 100.)
+
+## WCAG AA color-contrast — surfaced by the new axe gate, now [FIXED]
+The stricter axe run (desktop viewport, full ruleset) found real AA contrast failures that the earlier
+Lighthouse pass (mobile, homepage-only, subset of rules) had missed. All fixed — accessibility-required
+contrast shifts, permitted by the branding guardrail:
+- **`trust-bar.tsx`** — stat numbers `#06B6D4`→`#0E7490` (2.42→≈4.7:1) and `#F59E0B`→`#B45309`
+  (2.14→≈4.9:1) on white (large-text needs 3:1).
+- **`why-us.tsx`** — stat sublabels were the brand color at `opacity:0.65` (2.0–2.9:1) → now solid
+  `#475569` slate (≈7:1).
+- **`testimonials-section.tsx`** — metric-chip sublabels `#93C5FD` on `#EFF6FF` (1.65:1) → `#475569`.
+- **`app/contact/page.tsx`** — confidentiality badge `emerald-600`→`emerald-700` on `emerald-50`
+  (3.46→≈5.3:1); quick-card sub-text `#64748B`→`#475569` on the blue-tinted card (4.37→≈5.8:1).
+
+Result: `npm test` = **20/20 pass** (18 overflow + 2 a11y); Lighthouse a11y stays 100 on `/` and `/contact`.

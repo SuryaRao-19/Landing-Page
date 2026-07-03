@@ -116,6 +116,19 @@ Documented in **`.env.example`**:
 
 ---
 
+## Automated tests + CI
+- **`npm test`** — `node:test` + `puppeteer-core` (system Chrome) + `axe-core`. `tests/overflow.test.mjs`
+  asserts 0 horizontal overflow on 6 pages × {375,768,1024}px; `tests/a11y.test.mjs` runs axe on `/`
+  and `/contact` and fails on any serious/critical violation. **20/20 pass.**
+- **`.github/workflows/ci.yml`** — on push to `main` + every PR: lint → build → tests → **Lighthouse CI**
+  (`lighthouserc.json`: performance ≥ 0.80, a11y/best-practices/SEO = 1.0), Lighthouse reports uploaded
+  as a build artifact.
+- The strict axe gate surfaced (and we fixed) **WCAG AA contrast failures** Lighthouse had missed —
+  trust-bar stat numbers, why-us sublabels, testimonial metric chips, and two contact-page elements.
+  See `bugs-found.md` → “Pass 3”.
+
+---
+
 ## Changelog
 ```
 fix(a11y):       navbar route-change state reset moved out of effect — lint 0 errors/0 warnings
@@ -123,6 +136,8 @@ fix(responsive): eliminate horizontal overflow at 375px (testimonials +47, AI +1
 feat(nav):       mobile drawer closes on Escape + locks background scroll
 chore(cleanup):  remove 18 unused imports/vars; strip corrupted lines from bugs-found.md
 perf(lcp):       content-visibility on below-fold sections -> main-thread 6.6s->4.0s, perf 83->89
+test(ci):        node:test overflow + axe-core a11y suite (20 tests) + GitHub Actions + Lighthouse-CI budgets
+fix(a11y):       fix WCAG AA contrast (trust-bar, why-us, testimonials, contact) surfaced by the axe gate
 fix(icons):      emoji -> lucide across homepage (AI illustration, hero, About, Industries) + /services + /industries (secondary pages still pending)
 fix(a11y):       fix white-on-white "Talk to an AI Expert" outline button (bg-transparent)
 chore(footer):   repoint social links to brand handles; "Twitter" label → "X"
