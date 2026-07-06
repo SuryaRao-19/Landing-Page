@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { contactSchema } from '@/lib/contact-schema'
+import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
 // Handle the form submission server-side. Runs on the Node.js runtime so the
 // Web3Forms access key is never exposed to the browser.
@@ -72,6 +73,24 @@ export async function POST(request: Request) {
   }
 
   const d = parsed.data
+
+  // Persist the submission to Supabase (optional). Best-effort: if Supabase
+  // isn't configured this is skipped, and a DB error never blocks the email —
+  // Web3Forms remains the primary notification path.
+  const supabase = getSupabaseAdmin()
+  if (supabase) {
+    const { error } = await supabase.from('contact_submissions').insert({
+      name: d.name,
+      email: d.email,
+      company: d.company,
+      phone: d.phone || null,
+      service: d.service,
+      budget: d.budget || null,
+      message: d.message,
+      ip: clientIp(request),
+    })
+    if (error) console.error('[contact] Supabase insert failed', error.message)
+  }
 
   // Forward to Web3Forms (https://web3forms.com) — it emails the submission to
   // the inbox tied to the access key. The key stays server-side.
