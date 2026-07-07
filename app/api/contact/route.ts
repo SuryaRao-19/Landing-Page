@@ -2,8 +2,10 @@ import { NextResponse } from 'next/server'
 import { contactSchema } from '@/lib/contact-schema'
 import { getSupabaseAdmin } from '@/lib/supabase-admin'
 
-// Handle the form submission server-side. Runs on the Node.js runtime so the
-// Web3Forms access key is never exposed to the browser.
+// Handle the form submission server-side: validate, rate-limit, honeypot, and
+// persist to Supabase (the source of truth). Runs on the Node.js runtime for
+// the service-role Supabase client. Email is sent separately from the browser
+// via Web3Forms — its free plan rejects server-side API calls (403).
 export const runtime = 'nodejs'
 
 // ── Basic abuse protection ─────────────────────────────────────────────
@@ -69,12 +71,16 @@ export async function POST(request: Request) {
   const ip = clientIp(request)
 
   const supabase = getSupabaseAdmin()
-  const accessKey = process.env.WEB3FORMS_ACCESS_KEY
+  // Email is delivered by the browser (Web3Forms' free plan blocks server-side
+  // calls), so the server only needs to know whether email is configured to
+  // decide if the submission has any sink at all. NEXT_PUBLIC_* is readable
+  // here too.
+  const emailConfigured = !!process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY
 
-  // At least one sink must be configured, otherwise the submission would just
-  // vanish — that's an operator misconfiguration, not a user error.
-  if (!supabase && !accessKey) {
-    console.error('[contact] No sink configured: set SUPABASE_* and/or WEB3FORMS_ACCESS_KEY')
+  // At least one sink must exist, otherwise the submission would just vanish —
+  // that's an operator misconfiguration, not a user error.
+  if (!supabase && !emailConfigured) {
+    console.error('[contact] No sink configured: set SUPABASE_* and/or NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY')
     return NextResponse.json(
       { error: 'The contact form is not configured yet. Please email us directly.' },
       { status: 500 },
@@ -82,8 +88,7 @@ export async function POST(request: Request) {
   }
 
   // ── Primary sink: persist to Supabase ─────────────────────────────────
-  // Storage is the source of truth (viewable at /admin/submissions). A stored
-  // submission counts as a success even if the email notification later fails.
+  // Storage is the source of truth (viewable at /admin/submissions).
   let stored = false
   if (supabase) {
     try {
@@ -104,42 +109,10 @@ export async function POST(request: Request) {
     }
   }
 
-  // ── Best-effort notification: email via Web3Forms ─────────────────────
-  // Attempted only when a key is set. Web3Forms (https://web3forms.com) emails
-  // the submission to the inbox tied to the access key (kept server-side). A
-  // failure here never fails the request as long as the submission was stored.
-  let emailed = false
-  if (accessKey) {
-    try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify({
-          access_key: accessKey,
-          subject: `New enquiry — ${d.service} — ${d.company}`,
-          from_name: 'NexGen Website',
-          replyto: d.email,
-          // Submission fields (Web3Forms renders these into the email):
-          name: d.name,
-          email: d.email,
-          company: d.company,
-          phone: d.phone || '—',
-          service: d.service,
-          budget: d.budget || '—',
-          message: d.message,
-        }),
-      })
-      const result = (await res.json().catch(() => null)) as { success?: boolean; message?: string } | null
-      if (res.ok && result?.success) emailed = true
-      else console.error('[contact] Web3Forms responded', res.status, result?.message ?? '')
-    } catch (err) {
-      console.error('[contact] Network error calling Web3Forms', err)
-    }
-  }
-
-  // Success as long as the enquiry landed in at least one sink. Only when every
-  // configured sink failed do we ask the visitor to retry.
-  if (!stored && !emailed) {
+  // If Supabase was the only sink and it failed, ask the visitor to retry. When
+  // email is configured the browser still delivers it, so a storage miss alone
+  // isn't fatal.
+  if (!stored && !emailConfigured) {
     return NextResponse.json(
       { error: 'We could not process your message right now. Please try again in a moment.' },
       { status: 502 },

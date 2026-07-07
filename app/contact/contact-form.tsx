@@ -140,6 +140,35 @@ export function ContactForm() {
         const body = await res.json().catch(() => null)
         throw new Error(body?.error ?? 'Something went wrong. Please try again.')
       }
+
+      // Best-effort email notification via Web3Forms, sent from the browser
+      // because its free plan rejects server-side calls (403). Never blocks the
+      // success UI. Skipped when the honeypot is filled (bot) or no key is set.
+      const w3fKey = process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY
+      if (w3fKey && !website.trim()) {
+        try {
+          await fetch('https://api.web3forms.com/submit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+            body: JSON.stringify({
+              access_key: w3fKey,
+              subject: `New enquiry — ${data.service} — ${data.company}`,
+              from_name: 'NexGen Website',
+              replyto: data.email,
+              name: data.name,
+              email: data.email,
+              company: data.company,
+              phone: data.phone || '—',
+              service: data.service,
+              budget: data.budget || '—',
+              message: data.message,
+            }),
+          })
+        } catch {
+          // Best-effort: the submission is already stored, so ignore email errors.
+        }
+      }
+
       setSubmitted(true)
     } catch (err) {
       setServerError(
