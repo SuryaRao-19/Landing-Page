@@ -65,64 +65,85 @@ export async function POST(request: Request) {
     )
   }
 
-  const accessKey = process.env.WEB3FORMS_ACCESS_KEY
-  if (!accessKey) {
-    // Missing configuration is an operator error, not a user error.
-    console.error('[contact] Missing WEB3FORMS_ACCESS_KEY env var')
-    return NextResponse.json({ error: 'The contact form is not configured yet. Please email us directly.' }, { status: 500 })
-  }
-
   const d = parsed.data
+  const ip = clientIp(request)
 
-  // Persist the submission to Supabase (optional). Best-effort: if Supabase
-  // isn't configured this is skipped, and a DB error never blocks the email —
-  // Web3Forms remains the primary notification path.
   const supabase = getSupabaseAdmin()
-  if (supabase) {
-    const { error } = await supabase.from('contact_submissions').insert({
-      name: d.name,
-      email: d.email,
-      company: d.company,
-      phone: d.phone || null,
-      service: d.service,
-      budget: d.budget || null,
-      message: d.message,
-      ip: clientIp(request),
-    })
-    if (error) console.error('[contact] Supabase insert failed', error.message)
+  const accessKey = process.env.WEB3FORMS_ACCESS_KEY
+
+  // At least one sink must be configured, otherwise the submission would just
+  // vanish — that's an operator misconfiguration, not a user error.
+  if (!supabase && !accessKey) {
+    console.error('[contact] No sink configured: set SUPABASE_* and/or WEB3FORMS_ACCESS_KEY')
+    return NextResponse.json(
+      { error: 'The contact form is not configured yet. Please email us directly.' },
+      { status: 500 },
+    )
   }
 
-  // Forward to Web3Forms (https://web3forms.com) — it emails the submission to
-  // the inbox tied to the access key. The key stays server-side.
-  let res: Response
-  try {
-    res = await fetch('https://api.web3forms.com/submit', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
-        access_key: accessKey,
-        subject: `New enquiry — ${d.service} — ${d.company}`,
-        from_name: 'NexGen Website',
-        replyto: d.email,
-        // Submission fields (Web3Forms renders these into the email):
+  // ── Primary sink: persist to Supabase ─────────────────────────────────
+  // Storage is the source of truth (viewable at /admin/submissions). A stored
+  // submission counts as a success even if the email notification later fails.
+  let stored = false
+  if (supabase) {
+    try {
+      const { error } = await supabase.from('contact_submissions').insert({
         name: d.name,
         email: d.email,
         company: d.company,
-        phone: d.phone || '—',
+        phone: d.phone || null,
         service: d.service,
-        budget: d.budget || '—',
+        budget: d.budget || null,
         message: d.message,
-      }),
-    })
-  } catch (err) {
-    console.error('[contact] Network error calling Web3Forms', err)
-    return NextResponse.json({ error: 'Could not reach the email service. Please try again.' }, { status: 502 })
+        ip,
+      })
+      if (error) console.error('[contact] Supabase insert failed', error.message)
+      else stored = true
+    } catch (err) {
+      console.error('[contact] Supabase insert threw', err)
+    }
   }
 
-  const result = (await res.json().catch(() => null)) as { success?: boolean; message?: string } | null
-  if (!res.ok || !result?.success) {
-    console.error('[contact] Web3Forms responded', res.status, result?.message ?? '')
-    return NextResponse.json({ error: 'Failed to send your message. Please try again in a moment.' }, { status: 502 })
+  // ── Best-effort notification: email via Web3Forms ─────────────────────
+  // Attempted only when a key is set. Web3Forms (https://web3forms.com) emails
+  // the submission to the inbox tied to the access key (kept server-side). A
+  // failure here never fails the request as long as the submission was stored.
+  let emailed = false
+  if (accessKey) {
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          access_key: accessKey,
+          subject: `New enquiry — ${d.service} — ${d.company}`,
+          from_name: 'NexGen Website',
+          replyto: d.email,
+          // Submission fields (Web3Forms renders these into the email):
+          name: d.name,
+          email: d.email,
+          company: d.company,
+          phone: d.phone || '—',
+          service: d.service,
+          budget: d.budget || '—',
+          message: d.message,
+        }),
+      })
+      const result = (await res.json().catch(() => null)) as { success?: boolean; message?: string } | null
+      if (res.ok && result?.success) emailed = true
+      else console.error('[contact] Web3Forms responded', res.status, result?.message ?? '')
+    } catch (err) {
+      console.error('[contact] Network error calling Web3Forms', err)
+    }
+  }
+
+  // Success as long as the enquiry landed in at least one sink. Only when every
+  // configured sink failed do we ask the visitor to retry.
+  if (!stored && !emailed) {
+    return NextResponse.json(
+      { error: 'We could not process your message right now. Please try again in a moment.' },
+      { status: 502 },
+    )
   }
 
   return NextResponse.json({ ok: true })
