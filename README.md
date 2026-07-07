@@ -24,28 +24,30 @@ npm test             # node:test suite (overflow + axe a11y) — needs a running
 
 ## Environment variables
 
-The contact form (`/api/contact`) sends email via [Web3Forms](https://web3forms.com) (free tier —
-no domain or credit card). Copy `.env.example` → `.env.local` and set:
+The contact form (`/api/contact`) writes each submission to **one or both** of two sinks:
+**Supabase** (stored in Postgres, viewable at `/admin/submissions`) and **Web3Forms** email. A
+submission succeeds as long as it lands in *at least one* configured sink, so either can be used on
+its own. Copy `.env.example` → `.env.local` and set the vars for whichever you use:
 
 | Variable                    | Purpose                                                                                    |
 | --------------------------- | ----------------------------------------------------------------------------------------- |
-| `WEB3FORMS_ACCESS_KEY`      | Free access key from https://web3forms.com — submissions go to the email tied to it       |
-| `SUPABASE_URL`              | _Optional._ Supabase project URL — also stores each submission in Postgres                 |
-| `SUPABASE_SERVICE_ROLE_KEY` | _Optional._ Supabase service-role key (server-side only, bypasses RLS — never expose it)   |
+| `SUPABASE_URL`              | Supabase project URL — stores each submission in Postgres (primary sink)                    |
+| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (server-side only, bypasses RLS — never expose it)               |
+| `WEB3FORMS_ACCESS_KEY`      | _Optional._ Free key from https://web3forms.com — emails each submission (best-effort)     |
 | `ADMIN_USER`                | _Optional._ Username for the `/admin/submissions` view (defaults to `admin`)               |
 | `ADMIN_PASSWORD`            | _Optional._ Password for `/admin/submissions`. Unset ⇒ the admin view is fully locked      |
 
 Set the same vars in **Vercel → Project → Settings → Environment Variables** for production, then
-redeploy. Without `WEB3FORMS_ACCESS_KEY` the form validates and rate-limits, then returns a clear
-"not configured" error. The route keeps a honeypot + in-memory IP rate limit server-side; the key
-is never exposed to the browser.
+redeploy. With **neither** sink configured the form validates and rate-limits, then returns a clear
+"not configured" error. The route keeps a honeypot + in-memory IP rate limit server-side; no keys
+are ever exposed to the browser.
 
-### Optional: store submissions in Supabase
+### Store submissions in Supabase (primary sink)
 
-The contact route also **persists each submission to a Postgres table** when Supabase is
-configured — searchable and exportable, not just emailed. It's fully optional and additive: leave
-the two `SUPABASE_*` vars unset and the form behaves exactly as before (email only). A Supabase DB
-error never blocks the email.
+The contact route **persists each submission to a Postgres table** — searchable and exportable,
+and browsable at [`/admin/submissions`](#admin-view). This is the primary sink: once a submission is
+stored the request succeeds, and a failed/unconfigured Web3Forms email never blocks it (the email
+is best-effort notification only).
 
 To enable:
 
