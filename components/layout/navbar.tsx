@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { NAV_ITEMS } from '@/lib/data'
 
 /* ── Logo ─────────────────────────────────────── */
-function NexGenLogo({ scrolled }: { scrolled: boolean }) {
+function NexGenLogo({ onDark }: { onDark: boolean }) {
   return (
     <Link href="/" className="flex items-center gap-2.5 shrink-0 group" aria-label="NexGen — Home">
       <div className="relative">
@@ -30,7 +30,7 @@ function NexGenLogo({ scrolled }: { scrolled: boolean }) {
       </div>
       <span className={cn(
         'font-extrabold text-[1.1rem] tracking-[-0.03em] transition-colors duration-300',
-        scrolled ? 'text-[#0A0F1C]' : 'text-[#0A0F1C]',
+        onDark ? 'text-white' : 'text-[#0A0F1C]',
       )}>
         Nex<span className="text-[#2563EB]">Gen</span>
       </span>
@@ -149,6 +149,7 @@ function DropdownMenu({
 /* ── Main Navbar ──────────────────────────────── */
 export function Navbar() {
   const [scrolled,   setScrolled]   = useState(false)
+  const [heroDark,   setHeroDark]   = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const [openMenu,   setOpenMenu]   = useState<string | null>(null)
   const pathname = usePathname()
@@ -160,6 +161,24 @@ export function Navbar() {
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Detect whether the page's hero (the first tagged hero section) is dark, so
+  // the transparent nav can flip to light text for contrast. Re-checked on every
+  // route change.
+  useEffect(() => {
+    const hero = document.querySelector('[data-hero-theme]')
+    setHeroDark(hero?.getAttribute('data-hero-theme') === 'dark')
+  }, [pathname])
+
+  // Nav is over a dark hero only while transparent (not yet scrolled).
+  const overDark = heroDark && !scrolled
+  // Shared link colouring for desktop nav items + the plain "Contact" CTA.
+  const linkCls = (active: boolean) =>
+    active
+      ? overDark ? 'text-white bg-white/10' : 'text-[#2563EB] bg-[#F0F5FF]'
+      : overDark
+        ? 'text-white/85 hover:text-white hover:bg-white/10'
+        : 'text-[#374151] hover:text-[#0A0F1C] hover:bg-[#F8FAFC]'
 
   // Close any open menus when the route changes — done during render (React's
   // recommended pattern) instead of in an effect, to avoid a cascading re-render.
@@ -202,7 +221,7 @@ export function Navbar() {
           aria-label="Main navigation"
         >
           {/* Logo */}
-          <NexGenLogo scrolled={scrolled} />
+          <NexGenLogo onDark={overDark} />
 
           {/* Desktop nav */}
           <ul className="hidden lg:flex items-center gap-0.5 flex-1 justify-center" role="list">
@@ -221,9 +240,7 @@ export function Navbar() {
                         'inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl',
                         'text-[0.84rem] font-medium tracking-[-0.01em]',
                         'transition-all duration-150',
-                        openMenu === item.label
-                          ? 'text-[#2563EB] bg-[#F0F5FF]'
-                          : 'text-[#374151] hover:text-[#0A0F1C] hover:bg-[#F8FAFC]',
+                        linkCls(openMenu === item.label),
                       )}
                       onClick={() => setOpenMenu(openMenu === item.label ? null : item.label)}
                       aria-haspopup="menu"
@@ -233,7 +250,8 @@ export function Navbar() {
                       <ChevronDown
                         size={12}
                         className={cn(
-                          'text-[#94A3B8] transition-transform duration-200',
+                          'transition-transform duration-200',
+                          overDark ? 'text-white/60' : 'text-[#94A3B8]',
                           openMenu === item.label ? 'rotate-180 text-[#2563EB]' : '',
                         )}
                         aria-hidden
@@ -246,9 +264,7 @@ export function Navbar() {
                         'inline-flex items-center px-3.5 py-2 rounded-xl',
                         'text-[0.84rem] font-medium tracking-[-0.01em]',
                         'transition-all duration-150',
-                        isActive
-                          ? 'text-[#2563EB] bg-[#F0F5FF]'
-                          : 'text-[#374151] hover:text-[#0A0F1C] hover:bg-[#F8FAFC]',
+                        linkCls(isActive),
                       )}
                     >
                       {item.label}
@@ -278,7 +294,7 @@ export function Navbar() {
           <div className="hidden lg:flex items-center gap-2">
             <Link href="/contact" className={cn(
               'inline-flex items-center px-4 py-2 rounded-xl text-[0.84rem] font-medium tracking-[-0.01em]',
-              'text-[#374151] hover:text-[#0A0F1C] hover:bg-[#F8FAFC]',
+              linkCls(false),
               'transition-all duration-150',
             )}>
               Contact
@@ -300,7 +316,9 @@ export function Navbar() {
           <button
             className={cn(
               'lg:hidden ml-auto p-2 rounded-xl transition-colors',
-              'text-[#64748B] hover:text-[#0A0F1C] hover:bg-[#F1F5F9]',
+              overDark
+                ? 'text-white hover:bg-white/10'
+                : 'text-[#64748B] hover:text-[#0A0F1C] hover:bg-[#F1F5F9]',
             )}
             onClick={() => setMobileOpen(!mobileOpen)}
             aria-label={mobileOpen ? 'Close menu' : 'Open navigation'}
@@ -334,7 +352,7 @@ export function Navbar() {
             >
               {/* Header */}
               <div className="flex items-center justify-between px-5 h-[72px] border-b border-[#F1F5F9]">
-                <NexGenLogo scrolled />
+                <NexGenLogo onDark={false} />
                 <button
                   onClick={() => setMobileOpen(false)}
                   className="p-2 rounded-xl hover:bg-[#F1F5F9] transition-colors text-[#64748B]"

@@ -70,8 +70,14 @@
   --ease-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* ── Reset ────────────────────────────────────── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+/* ── Reset ──────────────────────────────────────
+   Must live inside `@layer base` so Tailwind's utility layer (margin-*,
+   padding-*, etc.) can override it. If left unlayered, this rule beats every
+   layered utility regardless of specificity and silently zeroes all spacing
+   utilities site-wide. */
+@layer base {
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+}
 
 /* ── Perf: skip rendering off-screen sections ──────
    Defers layout/paint/render of below-the-fold sections until they approach the

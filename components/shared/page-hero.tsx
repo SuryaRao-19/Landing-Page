@@ -33,6 +33,7 @@ export function PageHero({
 
   return (
     <section
+      data-hero-theme={dark ? 'dark' : 'light'}
       className={cn(
         padTop, 'relative overflow-hidden',
         dark ? 'bg-dark-mesh' : 'bg-[#F8FAFC]',
