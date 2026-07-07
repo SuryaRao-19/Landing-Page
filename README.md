@@ -24,23 +24,27 @@ npm test             # node:test suite (overflow + axe a11y) — needs a running
 
 ## Environment variables
 
-The contact form (`/api/contact`) writes each submission to **one or both** of two sinks:
-**Supabase** (stored in Postgres, viewable at `/admin/submissions`) and **Web3Forms** email. A
+The contact form writes each submission to **one or both** of two sinks: **Supabase** (stored via
+`/api/contact`, viewable at `/admin/submissions`) and **Web3Forms** email (sent from the browser). A
 submission succeeds as long as it lands in *at least one* configured sink, so either can be used on
 its own. Copy `.env.example` → `.env.local` and set the vars for whichever you use:
 
-| Variable                    | Purpose                                                                                    |
-| --------------------------- | ----------------------------------------------------------------------------------------- |
-| `SUPABASE_URL`              | Supabase project URL — stores each submission in Postgres (primary sink)                    |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase service-role key (server-side only, bypasses RLS — never expose it)               |
-| `WEB3FORMS_ACCESS_KEY`      | _Optional._ Free key from https://web3forms.com — emails each submission (best-effort)     |
-| `ADMIN_USER`                | _Optional._ Username for the `/admin/submissions` view (defaults to `admin`)               |
-| `ADMIN_PASSWORD`            | _Optional._ Password for `/admin/submissions`. Unset ⇒ the admin view is fully locked      |
+| Variable                           | Purpose                                                                              |
+| ---------------------------------- | ------------------------------------------------------------------------------------ |
+| `SUPABASE_URL`                     | Supabase project URL — stores each submission in Postgres (primary sink)              |
+| `SUPABASE_SERVICE_ROLE_KEY`        | Supabase service-role key (server-side only, bypasses RLS — never expose it)         |
+| `NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY` | _Optional._ Free key from https://web3forms.com — emails each submission (best-effort) |
+| `ADMIN_USER`                       | _Optional._ Username for the `/admin/submissions` view (defaults to `admin`)          |
+| `ADMIN_PASSWORD`                   | _Optional._ Password for `/admin/submissions`. Unset ⇒ the admin view is fully locked |
 
 Set the same vars in **Vercel → Project → Settings → Environment Variables** for production, then
 redeploy. With **neither** sink configured the form validates and rate-limits, then returns a clear
-"not configured" error. The route keeps a honeypot + in-memory IP rate limit server-side; no keys
-are ever exposed to the browser.
+"not configured" error. The route keeps a honeypot + in-memory IP rate limit server-side.
+
+> **Why the Web3Forms key is `NEXT_PUBLIC_`:** Web3Forms' free plan rejects server-side API calls
+> (HTTP 403), so the email is sent directly from the browser after the submission is stored. That
+> requires the key in the client bundle — which is fine, as Web3Forms access keys are designed to be
+> public. The Supabase service-role key stays strictly server-side.
 
 ### Store submissions in Supabase (primary sink)
 
