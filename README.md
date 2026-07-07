@@ -32,6 +32,8 @@ no domain or credit card). Copy `.env.example` → `.env.local` and set:
 | `WEB3FORMS_ACCESS_KEY`      | Free access key from https://web3forms.com — submissions go to the email tied to it       |
 | `SUPABASE_URL`              | _Optional._ Supabase project URL — also stores each submission in Postgres                 |
 | `SUPABASE_SERVICE_ROLE_KEY` | _Optional._ Supabase service-role key (server-side only, bypasses RLS — never expose it)   |
+| `ADMIN_USER`                | _Optional._ Username for the `/admin/submissions` view (defaults to `admin`)               |
+| `ADMIN_PASSWORD`            | _Optional._ Password for `/admin/submissions`. Unset ⇒ the admin view is fully locked      |
 
 Set the same vars in **Vercel → Project → Settings → Environment Variables** for production, then
 redeploy. Without `WEB3FORMS_ACCESS_KEY` the form validates and rate-limits, then returns a clear
@@ -55,6 +57,14 @@ To enable:
 
 The service-role key is only read in [`lib/supabase-admin.ts`](lib/supabase-admin.ts), which is
 guarded with `server-only` so it can never be bundled into the browser.
+
+### Admin view
+
+Stored submissions can be browsed at **`/admin/submissions`**, gated by HTTP Basic Auth. Set
+`ADMIN_PASSWORD` (and optionally `ADMIN_USER`) to unlock it — with no password set, every `/admin`
+request is denied. The gate lives in [`proxy.ts`](proxy.ts) (Next 16's renamed middleware, Node.js
+runtime) and is re-checked inside the page itself as defense in depth. The view is `noindex` and
+never cached.
 
 ## Project structure
 
